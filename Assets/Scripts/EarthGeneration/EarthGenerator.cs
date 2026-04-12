@@ -29,7 +29,10 @@ public class EarthGenerator : MonoBehaviour
             {
                 GameObject meshObject = new GameObject("PlanetSide" + i.ToString());
                 meshObject.transform.parent = transform;
-                meshObject.AddComponent<MeshRenderer>();
+
+                Material material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+                material.color = new Color(0.2f, 1, 0.2f);
+                meshObject.AddComponent<MeshRenderer>().sharedMaterial = material;
 
                 meshFilters[i] = meshObject.AddComponent<MeshFilter>();
                 meshFilters[i].sharedMesh = new Mesh();
