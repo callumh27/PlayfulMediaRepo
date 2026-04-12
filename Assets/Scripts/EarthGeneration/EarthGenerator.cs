@@ -32,6 +32,7 @@ public class EarthGenerator : MonoBehaviour
 
                 Material material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
                 material.color = new Color(0.2f, 1, 0.2f);
+                material.SetFloat("Smoothness", 0);
                 meshObject.AddComponent<MeshRenderer>().sharedMaterial = material;
 
                 meshFilters[i] = meshObject.AddComponent<MeshFilter>();
