@@ -15,7 +15,7 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
 {
     float3 worldPos = (id / float(textureSize - 1.0) - 0.5f) * planetRadius;
     
-    float halfRadius = planetRadius / 2;
+    float halfRadius = planetRadius;
     float maxD = length(float3(halfRadius, halfRadius, halfRadius));
     
     float pixelValue = length(worldPos) / (maxD + 1) - 0.5;
@@ -26,7 +26,7 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
     if (pixelValue > -0.01f && pixelValue < 0.01f)
     { // is a surface point
         int closestPointIndex = -1;
-        float closestDistance = FLT_MAX;
+        float closestDistance = 1000000;
         
         for (int i = 0; i < 9; i++)
         {
