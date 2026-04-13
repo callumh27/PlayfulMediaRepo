@@ -2,15 +2,41 @@ using UnityEngine;
 
 public class Noise3D : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    private int[] permutations =
     {
-        
+        78, 31, 224, 117, 94, 146, 226, 202, 39, 97, 192, 143, 209, 77, 228,
+        3, 230, 174, 248, 254, 122, 144, 213, 233, 93, 219, 227, 46, 0, 151,
+        141, 75, 89, 222, 14, 114, 11, 70, 66, 188, 61, 36, 158, 154, 247, 15,
+        40, 197, 6, 198, 246, 44, 239, 234, 240, 82, 69, 90, 81, 20, 211, 207,
+        13, 128, 159, 83, 244, 189, 203, 187, 95, 28, 88, 113, 205, 8, 26, 199,
+        245, 76, 153, 2, 19, 130, 177, 85, 79, 64, 200, 223, 140, 103, 190, 201,
+        152, 238, 148, 101, 118, 235, 135, 160, 156, 32, 150, 123, 173, 169, 215,
+        62, 109, 55, 105, 29, 27, 229, 216, 127, 21, 59, 111, 184, 125, 186, 172,
+        243, 155, 124, 131, 35, 180, 23, 221, 195, 112, 49, 149, 161, 42, 214, 120,
+        249, 86, 53, 142, 67, 108, 163, 51, 22, 58, 43, 242, 12, 48, 91, 50, 18, 165,
+        157, 212, 116, 115, 225, 164, 210, 193, 87, 65, 73, 57, 204, 17, 1, 138, 16,
+        176, 168, 74, 24, 147, 241, 60, 30, 52, 251, 45, 38, 255, 25, 217, 41, 232,
+        107, 181, 4, 104, 250, 208, 166, 220, 191, 71, 162, 252, 139, 7, 253, 133,
+        10, 126, 98, 145, 56, 5, 9, 68, 110, 194, 137, 84, 96, 175, 136, 129, 102,
+        171, 196, 237, 206, 47, 185, 92, 183, 99, 218, 178, 72, 121, 106, 134, 34,
+        170, 231, 182, 167, 37, 100, 132, 236, 54, 33, 179, 80, 119, 63
+    };
+
+    int permutationCount = 256;
+
+    public float Calculate3DNoiseValue(Vector3 worldPos)
+    {
+        int FlooredX0 = Mathf.FloorToInt(worldPos.X);
+        int FlooredY0 = Mathf.FloorToInt(worldPos.Y);
+        int FlooredZ0 = Mathf.FloorToInt(worldPos.Z);
+
+        FlooredX0 &= permutationCount;
+        FlooredY0 &= permutationCount;
+        FlooredZ0 &= permutationCount;
+
+        FlooredX0 = permutations[FlooredX0];
+        FlooredY0  = permutations[FlooredY0];
+        return FlooredY0;
     }
 }
