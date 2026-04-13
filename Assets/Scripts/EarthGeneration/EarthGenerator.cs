@@ -10,6 +10,9 @@ public class EarthGenerator : MonoBehaviour
 
     public int earthRadius = 20;
 
+    [Header("Climate Settings")]
+    public int temperature = 30;
+
     MeshFilter[] meshFilters;
     EarthFace[] earthFaces;
 
