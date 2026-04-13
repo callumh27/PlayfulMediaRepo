@@ -17,7 +17,7 @@ public class EarthGenerator : MonoBehaviour
     public int amountOfPlates = 9;
     public RenderTexture renderTexture;
     public ComputeShader computeShader;
-    private int renderTextureSize = 256;
+    public int renderTextureSize = 256;
 
     MeshFilter[] meshFilters;
     EarthFace[] earthFaces;
@@ -99,8 +99,6 @@ public class EarthGenerator : MonoBehaviour
 
         colours = tectonicPlates;
         points = tectonicPoints;
-
-
 
         computeShader.SetTexture(0, "TectonicLookupTexture", renderTexture); // can use .FindKernel() method if using multiple kernels
         computeShader.SetInt("textureSize", renderTextureSize);
