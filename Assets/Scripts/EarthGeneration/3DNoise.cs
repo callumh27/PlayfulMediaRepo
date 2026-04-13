@@ -27,9 +27,9 @@ public class Noise3D : MonoBehaviour
 
     public float Calculate3DNoiseValue(Vector3 worldPos)
     {
-        int FlooredX0 = Mathf.FloorToInt(worldPos.X);
-        int FlooredY0 = Mathf.FloorToInt(worldPos.Y);
-        int FlooredZ0 = Mathf.FloorToInt(worldPos.Z);
+        int FlooredX0 = Mathf.FloorToInt(worldPos.x);
+        int FlooredY0 = Mathf.FloorToInt(worldPos.y);
+        int FlooredZ0 = Mathf.FloorToInt(worldPos.z);
 
         FlooredX0 &= permutationCount;
         FlooredY0 &= permutationCount;
