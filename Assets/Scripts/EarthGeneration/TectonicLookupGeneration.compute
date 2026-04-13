@@ -1,0 +1,57 @@
+#pragma kernel TectonicsGenerator
+
+RWTexture3D<float4> TectonicLookupTexture;
+
+const float FLT_MAX = 10000000;
+
+float4 tectonicPoints[9];
+float4 tectonicColours[9];
+
+int textureSize;
+float planetRadius;
+
+[numthreads(8,8,8)]
+void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
+{
+    float3 worldPos = (id / float(textureSize - 1.0) - 0.5f) * planetRadius;
+    
+    float halfRadius = planetRadius / 2;
+    float maxD = length(float3(halfRadius, halfRadius, halfRadius));
+    
+    float pixelValue = length(worldPos) / (maxD + 1) - 0.5;
+    
+    TectonicLookupTexture[id] = pixelValue;
+    
+    // pixelValue == 0 is the surface of the sphere
+    if (pixelValue > -0.01f && pixelValue < 0.01f)
+    { // is a surface point
+        int closestPointIndex = -1;
+        float closestDistance = 1000000;
+        
+        for (int i = 0; i < 9; i++)
+        {
+            
+            if (distance(worldPos, tectonicPoints[i].xyz) < closestDistance)
+            {
+                closestPointIndex = i;
+                closestDistance = distance(worldPos, tectonicPoints[i].xyz);
+
+            }
+        }
+        
+        TectonicLookupTexture[id] = tectonicColours[closestPointIndex];
+        
+    }
+    
+    for (int i = 0; i < 9; i++)
+    {
+        if (distance(worldPos, tectonicPoints[i].xyz) < 0.25f)
+        {
+            TectonicLookupTexture[id] = tectonicColours[i];
+        }
+    }
+        
+        
+        
+}
+    

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class 3DNoise : MonoBehaviour
+public class Noise3D : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
