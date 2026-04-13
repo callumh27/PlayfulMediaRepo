@@ -596,7 +596,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc28e244f0f79d840a813e00367c05ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EarthGenerator
-  earthResolution: 10
+  earthResolution: 45
   earthRadius: 20
   temperature: 30
 --- !u!114 &2053769800

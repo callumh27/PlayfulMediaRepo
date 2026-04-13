@@ -33,7 +33,7 @@ public class EarthGenerator : MonoBehaviour
                 GameObject meshObject = new GameObject("PlanetSide" + i.ToString());
                 meshObject.transform.parent = transform;
 
-                Material material = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+                Material material = new Material(Shader.Find("Shader Graphs/EarthTerrain"));
                 material.color = new Color(0.2f, 1, 0.2f);
                 material.SetFloat("Smoothness", 0);
                 meshObject.AddComponent<MeshRenderer>().sharedMaterial = material;

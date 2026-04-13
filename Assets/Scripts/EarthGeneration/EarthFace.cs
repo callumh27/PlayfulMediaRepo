@@ -54,6 +54,7 @@ public class EarthFace
     {
         return mesh;
     }
+    
 
     public MeshData ConstructEarthFaceMesh()
     {
@@ -102,6 +103,7 @@ public class EarthFace
 
                 Vector3 pointOnUnitCube = localUp + ((percent.x - 0.5f) * 2 * axisA) + ((percent.y - 0.5f) * 2 * axisB);
                 Vector3 pointOnUnitSphere = PointOnCubeToPointOnSphere(pointOnUnitCube);//pointOnUnitCube.normalized;
+                //Vector3 vertexPos = pointOnUnitSphere * (GenerateRandom3DNoise(pointOnUnitSphere.x, pointOnUnitSphere.y, pointOnUnitSphere.z));
                 meshData.AddVertex(pointOnUnitSphere, vertexIndex); // x == 0 is out of the mesh as a border vertex
 
 
