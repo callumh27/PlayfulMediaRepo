@@ -15,7 +15,7 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
 {
     float3 worldPos = (id / float(textureSize - 1.0) - 0.5f) * planetRadius;
     
-    float halfRadius = planetRadius;
+    float halfRadius = planetRadius / 2f;
     float maxD = length(float3(halfRadius, halfRadius, halfRadius));
     
     float pixelValue = length(worldPos) / (maxD + 1) - 0.5;
