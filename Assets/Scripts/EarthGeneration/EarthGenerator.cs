@@ -78,7 +78,7 @@ public class EarthGenerator : MonoBehaviour
 
         renderTexture = new RenderTexture(renderTextureSize, renderTextureSize, 0);
         renderTexture.enableRandomWrite = true;
-        //renderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R16_SFloat;
+        renderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R16_SFloat;
         renderTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
         renderTexture.volumeDepth = renderTextureSize;
         renderTexture.filterMode = FilterMode.Point;
@@ -94,7 +94,7 @@ public class EarthGenerator : MonoBehaviour
             Vector4 direction = new Vector4(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f));
             tectonicPoints[i] = UnityEngine.Random.onUnitSphere * earthRadius / 2f;
             tectonicPlates[i] = new Vector4(UnityEngine.Random.Range(0f, 1.0f), UnityEngine.Random.Range(0f, 1.0f), UnityEngine.Random.Range(0f, 1.0f), 1);
-            Debug.Log(tectonicPoints[i]);
+            
         }
 
         colours = tectonicPlates;
