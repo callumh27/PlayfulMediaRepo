@@ -97,6 +97,8 @@ public class EarthGenerator : MonoBehaviour
             
         }
 
+        Debug.Log(renderTexture.height);
+
         colours = tectonicPlates;
         points = tectonicPoints;
 
