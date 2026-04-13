@@ -41,14 +41,16 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
         
         TectonicLookupTexture[id] = tectonicColours[closestPointIndex];
         
-    }
     
-    for (int i = 0; i < 9; i++)
-    {
-        if (distance(worldPos, tectonicPoints[i].xyz) < 0.25f)
+    
+        for (int i = 0; i < 9; i++)
         {
-            TectonicLookupTexture[id] = tectonicColours[i];
+            if (distance(worldPos, tectonicPoints[i].xyz) < 0.25f)
+            {
+                TectonicLookupTexture[id] = tectonicColours[i];
+            }
         }
+        
     }
         
         
