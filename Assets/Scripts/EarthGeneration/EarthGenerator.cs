@@ -94,10 +94,10 @@ public class EarthGenerator : MonoBehaviour
             Vector4 direction = new Vector4(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f));
             tectonicPoints[i] = UnityEngine.Random.onUnitSphere * earthRadius / 2f;
             tectonicPlates[i] = new Vector4(UnityEngine.Random.Range(0f, 1.0f), UnityEngine.Random.Range(0f, 1.0f), UnityEngine.Random.Range(0f, 1.0f), 1);
-            
+            Debug.Log(tectonicPlates);
         }
 
-        Debug.Log(renderTexture.height);
+        
 
         colours = tectonicPlates;
         points = tectonicPoints;
