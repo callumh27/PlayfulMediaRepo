@@ -8,6 +8,8 @@ public class EarthGenerator : MonoBehaviour
     [Range(2, 256)]
     public int earthResolution = 10;
 
+    public Material material;
+
     public int earthRadius = 20;
 
     [Header("Climate Settings")]
@@ -39,9 +41,6 @@ public class EarthGenerator : MonoBehaviour
                 GameObject meshObject = new GameObject("PlanetSide" + i.ToString());
                 meshObject.transform.parent = transform;
 
-                Material material = new Material(Shader.Find("Shader Graphs/EarthTerrain"));
-                material.color = new Color(0.2f, 1, 0.2f);
-                material.SetFloat("Smoothness", 0);
                 meshObject.AddComponent<MeshRenderer>().sharedMaterial = material;
 
                 meshFilters[i] = meshObject.AddComponent<MeshFilter>();
@@ -60,6 +59,7 @@ public class EarthGenerator : MonoBehaviour
         CalculateTectonicPoints(out Vector4[] colours, out Vector4[] points);
         GenerateMesh();
         transform.localScale = Vector3.one * earthRadius;
+        GenerateColours();
     }
 
     void GenerateMesh()
@@ -73,12 +73,21 @@ public class EarthGenerator : MonoBehaviour
 
     }
 
+    void GenerateColours()
+    {
+        foreach (MeshFilter m in meshFilters)
+        {
+            m.GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TectonicTexture", renderTexture);
+            //m.GetComponent<MeshRenderer>().sharedMaterial.SetFloat("_PlanetRadius", earthRadius);
+        }
+    }
+
     public void CalculateTectonicPoints(out Vector4[] colours, out Vector4[] points)
     {
 
         renderTexture = new RenderTexture(renderTextureSize, renderTextureSize, 0);
         renderTexture.enableRandomWrite = true;
-        renderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R16_SFloat;
+        renderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R16G16B16A16_SFloat;
         renderTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
         renderTexture.volumeDepth = renderTextureSize;
         renderTexture.filterMode = FilterMode.Point;
@@ -91,8 +100,7 @@ public class EarthGenerator : MonoBehaviour
 
         for (int i = 0; i < amountOfPlates; i++)
         {
-            Vector4 direction = new Vector4(UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f), UnityEngine.Random.Range(-1.0f, 1.0f));
-            tectonicPoints[i] = UnityEngine.Random.onUnitSphere * 5f;
+            tectonicPoints[i] = UnityEngine.Random.onUnitSphere * 10f;
             tectonicPlates[i] = new Vector4(UnityEngine.Random.Range(0f, 1.0f), UnityEngine.Random.Range(0f, 1.0f), UnityEngine.Random.Range(0f, 1.0f), 1);
             Debug.Log(tectonicPlates[i]);
         }
@@ -104,6 +112,7 @@ public class EarthGenerator : MonoBehaviour
 
         computeShader.SetTexture(0, "TectonicLookupTexture", renderTexture); // can use .FindKernel() method if using multiple kernels
         computeShader.SetInt("textureSize", renderTextureSize);
+        computeShader.SetInt("amountOfPlates", amountOfPlates);
         computeShader.SetFloat("planetRadius", 10);
         computeShader.SetVectorArray("tectonicPoints", points);
         computeShader.SetVectorArray("tectonicColours", colours);
