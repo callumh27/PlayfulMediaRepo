@@ -78,7 +78,7 @@ public class EarthGenerator : MonoBehaviour
         foreach (MeshFilter m in meshFilters)
         {
             m.GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TectonicTexture", renderTexture);
-            //m.GetComponent<MeshRenderer>().sharedMaterial.SetFloat("_PlanetRadius", earthRadius);
+            m.GetComponent<MeshRenderer>().sharedMaterial.SetFloat("_PlanetRadius", earthRadius);
         }
     }
 

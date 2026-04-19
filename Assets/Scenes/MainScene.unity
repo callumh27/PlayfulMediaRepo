@@ -1078,11 +1078,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EarthGenerator
   earthResolution: 45
+  material: {fileID: 2100000, guid: b0db3d3dcd0d42742b5557dc60e3f9eb, type: 2}
   earthRadius: 20
   temperature: 30
-  amountOfPlates: 9
+  amountOfPlates: 16
   renderTexture: {fileID: 0}
   computeShader: {fileID: 7200000, guid: a29bf2a5089d23643afcbaaaf7f25745, type: 3}
+  renderTextureSize: 256
 --- !u!114 &2053769800
 MonoBehaviour:
   m_ObjectHideFlags: 0
