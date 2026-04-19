@@ -1453,7 +1453,7 @@
     "m_Hidden": false,
     "m_ShaderOutputName": "_TerrainPersistence",
     "m_StageCapability": 3,
-    "m_Value": 0.25999999046325686,
+    "m_Value": 0.20000000298023225,
     "m_DefaultValue": 0.0,
     "m_Labels": [],
     "m_LiteralMode": false
@@ -3061,7 +3061,7 @@
     "m_Hidden": false,
     "m_ShaderOutputName": "_TerrainLacunarity",
     "m_StageCapability": 3,
-    "m_Value": 1.9900000095367432,
+    "m_Value": 3.0,
     "m_DefaultValue": 0.0,
     "m_Labels": [],
     "m_LiteralMode": false
@@ -3548,7 +3548,7 @@
     "m_Hidden": false,
     "m_ShaderOutputName": "_TerrainNoiseScale",
     "m_StageCapability": 3,
-    "m_Value": 6.900000095367432,
+    "m_Value": 3.0,
     "m_DefaultValue": 0.0,
     "m_Labels": [],
     "m_LiteralMode": false
@@ -3823,7 +3823,7 @@
     "m_Title": "TECTONIC LOOKUP MAPPING",
     "m_Position": {
         "x": -407.0,
-        "y": 518.0
+        "y": 517.9998779296875
     }
 }
 
@@ -6052,7 +6052,7 @@
     "m_Hidden": false,
     "m_ShaderOutputName": "_TerrainLacunarity",
     "m_StageCapability": 3,
-    "m_Value": 1.9900000095367432,
+    "m_Value": 3.609999895095825,
     "m_DefaultValue": 0.0,
     "m_Labels": [],
     "m_LiteralMode": false
@@ -7187,7 +7187,7 @@
     "m_ObjectId": "ce8b9b409ace4321b502f5f41639afff",
     "m_Title": "NOISE",
     "m_Position": {
-        "x": -2746.0,
+        "x": -2746.000244140625,
         "y": 1085.0
     }
 }
@@ -8363,7 +8363,7 @@
     "m_Hidden": false,
     "m_ShaderOutputName": "_TerrainNoiseScale",
     "m_StageCapability": 3,
-    "m_Value": 6.900000095367432,
+    "m_Value": 3.0,
     "m_DefaultValue": 0.0,
     "m_Labels": [],
     "m_LiteralMode": false
