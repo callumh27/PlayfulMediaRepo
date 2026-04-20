@@ -55,16 +55,16 @@ public class EarthLandPainter : MonoBehaviour
                 float unit = renderTextureSize / 10f;
 
                 Vector3 textureSpace = hit.point * unit;
+                float textureSpaceRadius = radius * unit;
 
 
+                float rSquared = textureSpaceRadius * textureSpaceRadius;
 
-                float rSquared = radius * radius;
-
-                for (int u = (int)(textureSpace.x - radius); u < (int)(textureSpace.x + radius) + 1; u++)
+                for (int u = (int)(textureSpace.x - textureSpaceRadius); u < (int)(textureSpace.x + textureSpaceRadius) + 1; u++)
                 {
-                    for (int v = (int)(textureSpace.y - radius); v < (int)(textureSpace.y + radius) + 1; v++)
+                    for (int v = (int)(textureSpace.y - textureSpaceRadius); v < (int)(textureSpace.y + textureSpaceRadius) + 1; v++)
                     {
-                        for (int w = (int)(textureSpace.z - radius); w < (int)(textureSpace.z + radius) + 1; w++)
+                        for (int w = (int)(textureSpace.z - textureSpaceRadius); w < (int)(textureSpace.z + textureSpaceRadius) + 1; w++)
                         {
                             if ((textureSpace.x - u) * (textureSpace.x - u) + (textureSpace.y - v) * (textureSpace.y - v) + (textureSpace.z - w) * (textureSpace.z - w) < rSquared) {
                                 //Vector3 convertedWorldPos = new Vector3(u - 0.5f, v - 0.5f, w - 0.5f) / (renderTextureSize - 1.0f);
