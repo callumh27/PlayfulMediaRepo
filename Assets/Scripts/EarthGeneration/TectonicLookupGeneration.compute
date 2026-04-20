@@ -4,8 +4,10 @@ RWTexture3D<float4> TectonicLookupTexture;
 
 const float FLT_MAX = 10000000;
 
-float4 tectonicPoints[9];
-float4 tectonicColours[9];
+int amountOfPlates;
+
+float4 tectonicPoints[25];
+float4 tectonicColours[25];
 
 int textureSize;
 float planetRadius;
@@ -15,12 +17,12 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
 {
     float3 worldPos = (id / float(textureSize - 1.0) - 0.5f) * planetRadius;
     
-    float halfRadius = planetRadius / 2f;
+    float halfRadius = planetRadius / 2;
     float maxD = length(float3(halfRadius, halfRadius, halfRadius));
     
-    float pixelValue = length(worldPos) / (maxD + 1) - 0.5;
+    float pixelValue = length(worldPos) / (maxD + 1) - 0.5f;
     
-    TectonicLookupTexture[id] = float4(pixelValue, pixelValue, pixelValue, 1);
+    TectonicLookupTexture[id] = pixelValue;
     
     // pixelValue == 0 is the surface of the sphere
     if (pixelValue > -0.01f && pixelValue < 0.01f)
@@ -28,7 +30,7 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
         int closestPointIndex = -1;
         float closestDistance = 1000000;
         
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < amountOfPlates; i++)
         {
             
             if (distance(worldPos, tectonicPoints[i].xyz) < closestDistance)
@@ -43,7 +45,7 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
         
     
     
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < amountOfPlates; i++)
         {
             if (distance(worldPos, tectonicPoints[i].xyz) < 0.25f)
             {
@@ -56,4 +58,3 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
         
         
 }
-    
