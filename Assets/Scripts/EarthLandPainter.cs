@@ -43,18 +43,33 @@ public class EarthLandPainter : MonoBehaviour
             position = hit.point;
             if (Mouse.current.leftButton.IsPressed())
             {
+                //user is currently painting on the surface of the Earth,
+
+                // convert world space coordinates into texture space coordinates using:
+                // radius of the Earth and the size of the texture
+                // planetRadius/textureSize
+                // 20 / 256 = 0.078125 == 1 unit
+
+                // multiply the unit by the world position vector to get the texture position
+
+                float unit = 10 / renderTextureSize;
+
+                Vector3 textureSpace = hit.point * unit;
+
+
+
                 float rSquared = radius * radius;
 
-                for (int u = (int)(hit.point.x - radius); u < (int)(hit.point.x + radius) + 1; u++)
+                for (int u = (int)(textureSpace.x - radius); u < (int)(textureSpace.x + radius) + 1; u++)
                 {
-                    for (int v = (int)(hit.point.y - radius); v < (int)(hit.point.y + radius) + 1; v++)
+                    for (int v = (int)(textureSpace.y - radius); v < (int)(textureSpace.y + radius) + 1; v++)
                     {
-                        for (int w = (int)(hit.point.z - radius); w < (int)(hit.point.z + radius) + 1; w++)
+                        for (int w = (int)(textureSpace.z - radius); w < (int)(textureSpace.z + radius) + 1; w++)
                         {
-                            if ((hit.point.x - u) * (hit.point.x - u) + (hit.point.y - v) * (hit.point.y - v) + (hit.point.z - w) * (hit.point.z - w) < rSquared) {
-                                Vector3 convertedWorldPos = new Vector3(u - 0.5f, v - 0.5f, w - 0.5f) / (renderTextureSize - 1.0f);
-                                Vector3 texturePos = convertedWorldPos * 10;
-                                texture.SetPixel((int)texturePos.x, (int)texturePos.y, (int)texturePos.z, new Color(0.0f, 0.0f, 0.0f, 1.0f));
+                            if ((textureSpace.x - u) * (textureSpace.x - u) + (textureSpace.y - v) * (textureSpace.y - v) + (textureSpace.z - w) * (textureSpace.z - w) < rSquared) {
+                                //Vector3 convertedWorldPos = new Vector3(u - 0.5f, v - 0.5f, w - 0.5f) / (renderTextureSize - 1.0f);
+                                //Vector3 texturePos = convertedWorldPos * 10;
+                                texture.SetPixel((int)textureSpace.x, (int)textureSpace.y, (int)textureSpace.z, new Color(0.0f, 0.0f, 0.0f, 1.0f));
                             }
                         }
                     }
