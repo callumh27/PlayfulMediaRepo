@@ -52,9 +52,9 @@ public class EarthLandPainter : MonoBehaviour
 
                 // multiply the unit by the world position vector to get the texture position
 
-                float unit = renderTextureSize / 10f;
+                float unit = renderTextureSize / 20f;
 
-                Vector3 textureSpace = hit.point * unit;
+                Vector3 textureSpace = new Vector3(-hit.point.x, -hit.point.y, -hit.point.z) * unit * 0.5f;
                 float textureSpaceRadius = radius * unit;
 
 
