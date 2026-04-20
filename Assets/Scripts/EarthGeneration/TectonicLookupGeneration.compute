@@ -6,11 +6,19 @@ const float FLT_MAX = 10000000;
 
 int amountOfPlates;
 
-float4 tectonicPoints[25];
+float4 tectonicPoints[1024];
 float4 tectonicColours[25];
 
 int textureSize;
 float planetRadius;
+
+struct TectonicPlate
+{
+    float4 colour;
+};
+
+TectonicPlate tectonicPlates[25];
+
 
 [numthreads(8,8,8)]
 void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
