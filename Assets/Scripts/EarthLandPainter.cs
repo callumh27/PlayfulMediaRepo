@@ -52,7 +52,7 @@ public class EarthLandPainter : MonoBehaviour
 
                 // multiply the unit by the world position vector to get the texture position
 
-                float unit = 10 / renderTextureSize;
+                float unit = renderTextureSize / 10f;
 
                 Vector3 textureSpace = hit.point * unit;
 
@@ -69,7 +69,7 @@ public class EarthLandPainter : MonoBehaviour
                             if ((textureSpace.x - u) * (textureSpace.x - u) + (textureSpace.y - v) * (textureSpace.y - v) + (textureSpace.z - w) * (textureSpace.z - w) < rSquared) {
                                 //Vector3 convertedWorldPos = new Vector3(u - 0.5f, v - 0.5f, w - 0.5f) / (renderTextureSize - 1.0f);
                                 //Vector3 texturePos = convertedWorldPos * 10;
-                                texture.SetPixel((int)textureSpace.x, (int)textureSpace.y, (int)textureSpace.z, new Color(0.0f, 0.0f, 0.0f, 1.0f));
+                                texture.SetPixel(u, (int)textureSpace.y, (int)textureSpace.z, new Color(0.0f, 0.0f, 0.0f, 1.0f));
                             }
                         }
                     }
