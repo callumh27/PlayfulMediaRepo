@@ -17,5 +17,9 @@ public class EarthPainterInspector : Editor
         {
             painter.SaveRenderTexture();
         }
+        if (GUILayout.Button("Generate Blank Sphere Map"))
+        {
+            painter.GenerateBlankSphereRenderTexture();
+        }
     }
 }

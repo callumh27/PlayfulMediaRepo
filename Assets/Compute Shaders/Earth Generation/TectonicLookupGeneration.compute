@@ -30,8 +30,6 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
     
     float pixelValue = length(worldPos) / (maxD + 1) - 0.5f;
     
-    TectonicLookupTexture[id] = pixelValue;
-    
     // pixelValue == 0 is the surface of the sphere
     if (pixelValue > -0.01f && pixelValue < 0.01f)
     { // is a surface point

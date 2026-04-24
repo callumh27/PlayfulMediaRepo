@@ -25,6 +25,8 @@ public class EarthLandPainter : MonoBehaviour
     public RenderTexture renderTexture;
     public Texture3D texture;
 
+    public ComputeShader compute;
+
     private void Update()
     {
         if (!isEnabled) return;
@@ -54,7 +56,7 @@ public class EarthLandPainter : MonoBehaviour
 
                 float unit = renderTextureSize / 20f;
 
-                Vector3 textureSpace = new Vector3(-hit.point.x, -hit.point.y, -hit.point.z) * unit * 0.5f;
+                Vector3 textureSpace = new Vector3(hit.point.x - hit.point.x * 0.5f, hit.point.y - hit.point.y * 0.5f, hit.point.z - hit.point.z * 0.5f) * unit;
                 float textureSpaceRadius = radius * unit;
 
 
@@ -67,9 +69,13 @@ public class EarthLandPainter : MonoBehaviour
                         for (int w = (int)(textureSpace.z - textureSpaceRadius); w < (int)(textureSpace.z + textureSpaceRadius) + 1; w++)
                         {
                             if ((textureSpace.x - u) * (textureSpace.x - u) + (textureSpace.y - v) * (textureSpace.y - v) + (textureSpace.z - w) * (textureSpace.z - w) < rSquared) {
+                                if (new Vector3(u,v,w).magnitude >= 8 && new Vector3(u, v, w).magnitude <= 12)
+                                {
+                                    texture.SetPixel(u, v, w, new Color(0.0f, 0.0f, 0.0f, 1.0f));
+                                }
                                 //Vector3 convertedWorldPos = new Vector3(u - 0.5f, v - 0.5f, w - 0.5f) / (renderTextureSize - 1.0f);
                                 //Vector3 texturePos = convertedWorldPos * 10;
-                                texture.SetPixel(u, v, w, new Color(0.0f, 0.0f, 0.0f, 1.0f));
+                                
                             }
                         }
                     }
@@ -106,6 +112,26 @@ public class EarthLandPainter : MonoBehaviour
         AssetDatabase.CreateAsset(renderTexture, "Assets/" + "EarthRenderTexture" + ".asset");
 
     }
+
+    public void GenerateBlankSphereRenderTexture()
+    {
+        RenderTexture newRenderTexture = new RenderTexture(renderTextureSize, renderTextureSize, 0);
+        newRenderTexture.enableRandomWrite = true;
+        newRenderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R16G16B16A16_SFloat;
+        newRenderTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
+        newRenderTexture.volumeDepth = renderTextureSize;
+        newRenderTexture.filterMode = FilterMode.Point;
+        newRenderTexture.Create();
+
+        compute.SetTexture(0, "SphereTexture", newRenderTexture); // can use .FindKernel() method if using multiple kernels
+        compute.SetInt("textureSize", renderTextureSize);
+        compute.SetFloat("planetRadius", 10);
+        compute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
+
+        AssetDatabase.CreateAsset(renderTexture, "Assets/" + "EarthRenderTexture" + ".asset");
+
+    }
+
 
     private void OnDrawGizmos()
     {
