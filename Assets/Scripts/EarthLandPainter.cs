@@ -108,7 +108,7 @@ public class EarthLandPainter : MonoBehaviour
         newRenderTexture.Create();
         renderTexture = newRenderTexture;
 
-        Graphics.CopyTexture(texture, newRenderTexture);
+        //Graphics.CopyTexture(texture, newRenderTexture);
         AssetDatabase.CreateAsset(renderTexture, "Assets/" + "EarthRenderTexture" + ".asset");
 
     }
@@ -123,12 +123,14 @@ public class EarthLandPainter : MonoBehaviour
         newRenderTexture.filterMode = FilterMode.Point;
         newRenderTexture.Create();
 
-        compute.SetTexture(0, "SphereTexture", newRenderTexture); // can use .FindKernel() method if using multiple kernels
+        renderTexture = newRenderTexture;
+
+        compute.SetTexture(0, "SphereTexture", renderTexture); // can use .FindKernel() method if using multiple kernels
         compute.SetInt("textureSize", renderTextureSize);
         compute.SetFloat("planetRadius", 10);
         compute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
 
-        AssetDatabase.CreateAsset(renderTexture, "Assets/" + "EarthRenderTexture" + ".asset");
+        
 
     }
 
