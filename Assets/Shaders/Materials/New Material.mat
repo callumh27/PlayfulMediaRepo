@@ -119,7 +119,7 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _Temp: 0
-    - _Temperature: 69.8
+    - _Temperature: 64.1
     - _TerrainFrequency: 0.8
     - _TerrainLacunarity: 4.59
     - _TerrainNoiseScale: 1.93

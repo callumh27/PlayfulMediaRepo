@@ -59,7 +59,7 @@ public class EarthLandPainter : MonoBehaviour
                 paintCompute.SetFloat("currentBrushRadius", radius);
                 paintCompute.SetVector("currentBrushPosition", hit.point);
                 paintCompute.SetTexture(0, "SphereTexture", renderTexture);
-                paintCompute.SetFloat("planetRadius", 10);
+                paintCompute.SetFloat("planetRadius", 20);
                 paintCompute.SetInt("textureSize", renderTextureSize);
                 paintCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
 

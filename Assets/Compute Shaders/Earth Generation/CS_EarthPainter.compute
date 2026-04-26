@@ -14,14 +14,20 @@ float currentBrushRadius;
 [numthreads(8,8,8)]
 void CSMain(uint3 id : SV_DispatchThreadID)
 {
-    //somehow need to set the pixels in the brush radius around the current brush position to white + with falloff
-    // STEP 1 : GET THE BRUSH POSITION ON THE TEXTURE
+    // convert brush world position into texture position
+    // convert current pixel id to texture position
+    // check if the distance between the two positions is less than the radius of the brush
+    // if so paint
     
-    
+    //float3 brushTexturePos = (currentBrushPosition / float(textureSize - 1.0) - 0.5f) * planetRadius;
+    //float3 brushTexturePos = (currentBrushPosition / float(planetRadius) - 0.5f) * textureSize;
+    //float brushTextureRadius = (currentBrushRadius / float(planetRadius) - 0.5f) * textureSize;
+    //float3 pixelTexturePos = (id / float(textureSize - 1.0) - 0.5f) * planetRadius;
 
-    // this is currently just getting the texture position of the pixel and then comparing it with the world brush pos
-    float3 worldPos = (id / float(textureSize - 1.0) - 0.5f) * planetRadius; 
-    if (length(worldPos - currentBrushPosition) < currentBrushRadius){
+    float3 pixelWorldPos = (id / float(textureSize - 1.0) - 0.5f) * planetRadius * 2;
+
+
+    if (length(currentBrushPosition - pixelWorldPos) < currentBrushRadius && SphereTexture[id].w == 1){
         SphereTexture[id] = float4(1,1,1,1);
     }
     else{
