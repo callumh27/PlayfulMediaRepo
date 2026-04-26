@@ -32,6 +32,12 @@
         },
         {
             "m_Id": "57a6ecf6fb4c4be9bd4202db04e5b6e7"
+        },
+        {
+            "m_Id": "3ac0b2a4c0af4df9b03d4f1fa1c686fc"
+        },
+        {
+            "m_Id": "39518d18762d4e1d8b157e6e05fb9ece"
         }
     ],
     "m_Keywords": [],
@@ -3256,6 +3262,38 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Texture3DShaderProperty",
+    "m_ObjectId": "39518d18762d4e1d8b157e6e05fb9ece",
+    "m_Guid": {
+        "m_GuidSerialized": "ffaf7b59-da7e-4992-a77a-813f532b8cdc"
+    },
+    "promotedFromAssetID": "",
+    "promotedFromCategoryName": "",
+    "promotedOrdering": -1,
+    "m_Name": "LandmassTexture",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "LandmassTexture",
+    "m_DefaultReferenceName": "_LandmassTexture",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+    "m_Value": {
+        "m_SerializedTexture": "",
+        "m_Guid": ""
+    },
+    "m_Modifiable": true
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.BlockNode",
     "m_ObjectId": "39bfea26e09b4e3791ab22d875934133",
     "m_Group": {
@@ -3336,6 +3374,50 @@
         "w": 0.0
     },
     "m_LiteralMode": false
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "3ac0b2a4c0af4df9b03d4f1fa1c686fc",
+    "m_Guid": {
+        "m_GuidSerialized": "e28d074d-5456-4cc8-bf3e-bd75b0724462"
+    },
+    "promotedFromAssetID": "",
+    "promotedFromCategoryName": "",
+    "promotedOrdering": -1,
+    "m_Name": "Float",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Float",
+    "m_DefaultReferenceName": "_Float",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+    "m_Value": 0.0,
+    "m_FloatType": 0,
+    "m_LiteralFloatMode": false,
+    "m_RangeValues": {
+        "x": 0.0,
+        "y": 1.0
+    },
+    "m_SliderType": 0,
+    "m_SliderPower": 3.0,
+    "m_EnumType": 0,
+    "m_CSharpEnumString": "",
+    "m_EnumNames": [
+        "Default"
+    ],
+    "m_EnumValues": [
+        0
+    ]
 }
 
 {
@@ -4225,8 +4307,8 @@
     "m_ObjectId": "5603ee5ed6714d7c8f4fcdede41c9de2",
     "m_Title": "TECTONIC LOOKUP MAPPING",
     "m_Position": {
-        "x": -407.0,
-        "y": 518.0
+        "x": -407.19970703125,
+        "y": 516.0
     }
 }
 
@@ -4555,6 +4637,9 @@
             "m_Id": "97ee00d4b57549f58d1cb3f1eb91f0a2"
         },
         {
+            "m_Id": "39518d18762d4e1d8b157e6e05fb9ece"
+        },
+        {
             "m_Id": "d9ee2a3ef3f14b3f96b2efaf3a07abed"
         },
         {
@@ -4580,6 +4665,9 @@
         },
         {
             "m_Id": "57a6ecf6fb4c4be9bd4202db04e5b6e7"
+        },
+        {
+            "m_Id": "3ac0b2a4c0af4df9b03d4f1fa1c686fc"
         }
     ]
 }
@@ -7940,8 +8028,8 @@
     "m_ObjectId": "ce8b9b409ace4321b502f5f41639afff",
     "m_Title": "NOISE",
     "m_Position": {
-        "x": -2746.0,
-        "y": 1085.0
+        "x": -2746.39990234375,
+        "y": 1083.199951171875
     }
 }
 
