@@ -1,9 +1,7 @@
-// Each #kernel tells which function to compile; you can have many kernels
+
 #pragma kernel GenerateBlankSphereMap
 
-// Create a RenderTexture with enableRandomWrite flag and set it
-// with cs.SetTexture
-RWTexture3D<float4> SphereTexture;
+RWTexture3D<float> SphereTexture;
 
 int textureSize;
 float planetRadius;
@@ -17,6 +15,13 @@ void GenerateBlankSphereMap(uint3 id : SV_DispatchThreadID)
     float maxD = length(float3(halfRadius, halfRadius, halfRadius));
     
     float pixelValue = length(worldPos) / (maxD + 1) - 0.5f;
+    // pixelValue == 0 is the surface of the sphere
+    if (pixelValue > -0.01f && pixelValue < 0.01f){
+        SphereTexture[id] = 1;
+    }
+    else{
+        SphereTexture[id] = 0;
+    }
     
-    SphereTexture[id] = pixelValue;
+   
 }

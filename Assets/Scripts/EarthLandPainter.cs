@@ -89,6 +89,8 @@ public class EarthLandPainter : MonoBehaviour
 
     }
 
+
+    // generates blank 3D texture and stores it in the class
     public void CreateNewRenderTexture()
     {
        
@@ -97,41 +99,37 @@ public class EarthLandPainter : MonoBehaviour
 
     }
 
-    public void SaveRenderTexture()
+    // converts the 3D texture into a render texture and then saves it as an asset
+    public void Save3DTexture()
     {
-        RenderTexture newRenderTexture = new RenderTexture(renderTextureSize, renderTextureSize, 0);
-        newRenderTexture.enableRandomWrite = true;
-        newRenderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R32G32B32A32_UInt;
-        newRenderTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
-        newRenderTexture.volumeDepth = renderTextureSize;
-        newRenderTexture.filterMode = FilterMode.Point;
-        newRenderTexture.Create();
-        renderTexture = newRenderTexture;
-
-        //Graphics.CopyTexture(texture, newRenderTexture);
+        Graphics.CopyTexture(texture, renderTexture);
         AssetDatabase.CreateAsset(renderTexture, "Assets/" + "EarthRenderTexture" + ".asset");
 
     }
 
     public void GenerateBlankSphereRenderTexture()
     {
-        RenderTexture newRenderTexture = new RenderTexture(renderTextureSize, renderTextureSize, 0);
-        newRenderTexture.enableRandomWrite = true;
-        newRenderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R16G16B16A16_SFloat;
-        newRenderTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
-        newRenderTexture.volumeDepth = renderTextureSize;
-        newRenderTexture.filterMode = FilterMode.Point;
-        newRenderTexture.Create();
+        renderTexture = new RenderTexture(renderTextureSize, renderTextureSize, 0);
+        renderTexture.enableRandomWrite = true;
+        renderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R16G16B16A16_SFloat;
+        renderTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
+        renderTexture.volumeDepth = renderTextureSize;
+        renderTexture.filterMode = FilterMode.Point;
+        renderTexture.Create();
 
-        renderTexture = newRenderTexture;
+        AssetDatabase.CreateAsset(renderTexture, "Assets/Pre-Compute/" + "BlankEarthRenderTexture" + ".asset");
 
         compute.SetTexture(0, "SphereTexture", renderTexture); // can use .FindKernel() method if using multiple kernels
         compute.SetInt("textureSize", renderTextureSize);
         compute.SetFloat("planetRadius", 10);
         compute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
+    }
 
-        
-
+    public void SaveRenderTexture()
+    {
+        //Texture3D assetTexture = new Texture3D(renderTexture.width, renderTexture.height, renderTexture.volumeDepth, TextureFormat.RGBA32, false);
+        //Graphics.CopyTexture(renderTexture, assetTexture);
+        //AssetDatabase.CreateAsset(renderTexture, "Assets/Pre-Compute/" + "BlankEarthRenderTexture" + ".asset");
     }
 
 
