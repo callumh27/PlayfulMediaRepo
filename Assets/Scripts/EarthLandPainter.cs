@@ -26,6 +26,7 @@ public class EarthLandPainter : MonoBehaviour
     public Texture3D texture;
 
     public ComputeShader compute;
+    public ComputeShader paintCompute;
 
     private void Update()
     {
@@ -54,7 +55,15 @@ public class EarthLandPainter : MonoBehaviour
 
                 // multiply the unit by the world position vector to get the texture position
 
-                float unit = renderTextureSize / 20f;
+
+                paintCompute.SetFloat("currentBrushRadius", radius);
+                paintCompute.SetVector("currentBrushPosition", hit.point);
+                paintCompute.SetTexture(0, "SphereTexture", renderTexture);
+                paintCompute.SetFloat("planetRadius", 10);
+                paintCompute.SetInt("textureSize", renderTextureSize);
+                paintCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
+
+                /*float unit = renderTextureSize / 20f;
 
                 Vector3 textureSpace = new Vector3(hit.point.x - hit.point.x * 0.5f, hit.point.y - hit.point.y * 0.5f, hit.point.z - hit.point.z * 0.5f) * unit;
                 float textureSpaceRadius = radius * unit;
@@ -80,7 +89,7 @@ public class EarthLandPainter : MonoBehaviour
                         }
                     }
                 }
-                texture.Apply();
+                texture.Apply();*/
             }
             
                         

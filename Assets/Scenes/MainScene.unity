@@ -1087,6 +1087,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   renderTexture: {fileID: 0}
   texture: {fileID: 0}
+  compute: {fileID: 7200000, guid: c0c02f2baccb004418d0f2354c48253c, type: 3}
+  paintCompute: {fileID: 7200000, guid: e548d668a7d606241a7b55fa3860038d, type: 3}
 --- !u!1 &2053769797
 GameObject:
   m_ObjectHideFlags: 0

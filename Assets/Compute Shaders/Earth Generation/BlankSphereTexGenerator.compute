@@ -1,10 +1,11 @@
 
 #pragma kernel GenerateBlankSphereMap
 
-RWTexture3D<float> SphereTexture;
+RWTexture3D<float4> SphereTexture;
 
 int textureSize;
 float planetRadius;
+
 
 [numthreads(8,8,8)]
 void GenerateBlankSphereMap(uint3 id : SV_DispatchThreadID)
@@ -16,12 +17,12 @@ void GenerateBlankSphereMap(uint3 id : SV_DispatchThreadID)
     
     float pixelValue = length(worldPos) / (maxD + 1) - 0.5f;
     // pixelValue == 0 is the surface of the sphere
-    if (pixelValue > -0.01f && pixelValue < 0.01f){
-        SphereTexture[id] = 1;
+    if (pixelValue > -0.01f && pixelValue < 0.01f)
+    {
+        SphereTexture[id] = float4(0,0,0,1);
+    } else{
+        SphereTexture[id] = float4(0,0,0,0);
     }
-    else{
-        SphereTexture[id] = 0;
-    }
-    
-   
 }
+
+
