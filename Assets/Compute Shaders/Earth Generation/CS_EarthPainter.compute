@@ -27,14 +27,14 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 
     float distanceFromCentreOfBrush = length(currentBrushPosition - pixelWorldPos);
 
-    if (distanceFromCentreOfBrush < currentBrushRadius && SphereTexture[id].w == 1){
+    if (distanceFromCentreOfBrush < currentBrushRadius && SphereTexture[id].y == 1){
 
         // linear fall off value
         //float colourValue = (-(distanceFromCentreOfBrush / currentBrushRadius) + 1) * brushStrength * float(addOrSubtract);
         // exponential fall off value
         float colourValue = pow(2.71828, -(5.0*(distanceFromCentreOfBrush / currentBrushRadius))) * brushStrength * float(addOrSubtract);
 
-        float4 pixelValue = float4(colourValue,colourValue,colourValue,1);
+        float4 pixelValue = float4(colourValue,1,0,0);
         
         SphereTexture[id] = clamp(SphereTexture[id] + pixelValue, 0 ,1);
     }

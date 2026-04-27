@@ -93,7 +93,7 @@ public class EarthLandPainter : MonoBehaviour
     {
         renderTexture = new RenderTexture(renderTextureSize, renderTextureSize, 0);
         renderTexture.enableRandomWrite = true;
-        renderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8A8_UNorm;
+        renderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8_SNorm;
         renderTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
         renderTexture.volumeDepth = renderTextureSize;
         renderTexture.filterMode = FilterMode.Point;
@@ -114,7 +114,7 @@ public class EarthLandPainter : MonoBehaviour
         int width = renderTexture.width;
         int height = renderTexture.height;
         int depth = renderTexture.volumeDepth;
-        var a = new NativeArray<byte>((width * height * depth) * 4, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+        var a = new NativeArray<byte>((width * height * depth) * 2, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
         AsyncGPUReadback.RequestIntoNativeArray(ref a, renderTexture, 0, (_) =>
         {
             Texture3D output = new Texture3D(width, height, depth, renderTexture.graphicsFormat, TextureCreationFlags.None);
@@ -123,7 +123,7 @@ public class EarthLandPainter : MonoBehaviour
             AssetDatabase.CreateAsset(output, "Assets/Pre-Compute/EarthTextures/" + "EarthMap.asset");
             AssetDatabase.SaveAssetIfDirty(output);
             a.Dispose();
-            renderTexture.Release();
+            //renderTexture.Release();
         });
     }
 
