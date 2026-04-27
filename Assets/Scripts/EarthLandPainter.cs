@@ -19,6 +19,7 @@ public class EarthLandPainter : MonoBehaviour
     [SerializeField] private Camera mainCamera;
     [SerializeField] private LayerMask earthLayer;
     public int renderTextureSize = 256;
+    public Material earthMaterial;
 
     public Vector3 position = Vector3.zero;
 
@@ -32,7 +33,7 @@ public class EarthLandPainter : MonoBehaviour
     {
         if (!isEnabled) return;
 
-       
+       earthMaterial.SetTexture("_LandmassTexture", renderTexture);
 
 
         Vector3 mouseScreenPosition = new Vector3(Mouse.current.position.x.ReadValue(), Mouse.current.position.y.ReadValue(), 0);
@@ -57,10 +58,12 @@ public class EarthLandPainter : MonoBehaviour
 
 
                 paintCompute.SetFloat("currentBrushRadius", radius);
+                paintCompute.SetFloat("brushStrength", strength);
                 paintCompute.SetVector("currentBrushPosition", hit.point);
                 paintCompute.SetTexture(0, "SphereTexture", renderTexture);
                 paintCompute.SetFloat("planetRadius", 20);
                 paintCompute.SetInt("textureSize", renderTextureSize);
+                paintCompute.SetInt("addOrSubtract", 1);
                 paintCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
 
                 /*float unit = renderTextureSize / 20f;
@@ -90,6 +93,17 @@ public class EarthLandPainter : MonoBehaviour
                     }
                 }
                 texture.Apply();*/
+            }
+            else if (Mouse.current.rightButton.IsPressed())
+            {
+                paintCompute.SetFloat("currentBrushRadius", radius);
+                paintCompute.SetFloat("brushStrength", strength);
+                paintCompute.SetVector("currentBrushPosition", hit.point);
+                paintCompute.SetTexture(0, "SphereTexture", renderTexture);
+                paintCompute.SetFloat("planetRadius", 20);
+                paintCompute.SetInt("textureSize", renderTextureSize);
+                paintCompute.SetInt("addOrSubtract", -1);
+                paintCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
             }
             
                         

@@ -10,6 +10,9 @@ float planetRadius;
 
 float3 currentBrushPosition;
 float currentBrushRadius;
+float brushStrength;
+
+int addOrSubtract;
 
 [numthreads(8,8,8)]
 void CSMain(uint3 id : SV_DispatchThreadID)
@@ -26,9 +29,18 @@ void CSMain(uint3 id : SV_DispatchThreadID)
 
     float3 pixelWorldPos = (id / float(textureSize - 1.0) - 0.5f) * planetRadius * 2;
 
+    float distanceFromCentreOfBrush = length(currentBrushPosition - pixelWorldPos);
 
-    if (length(currentBrushPosition - pixelWorldPos) < currentBrushRadius && SphereTexture[id].w == 1){
-        SphereTexture[id] = float4(1,1,1,1);
+    if (distanceFromCentreOfBrush < currentBrushRadius && SphereTexture[id].w == 1){
+
+        // linear fall off value
+        //float colourValue = (-(distanceFromCentreOfBrush / currentBrushRadius) + 1) * brushStrength * float(addOrSubtract);
+        // exponential fall off value
+        float colourValue = pow(2.71828, -(5.0*(distanceFromCentreOfBrush / currentBrushRadius))) * brushStrength * float(addOrSubtract);
+
+        float4 pixelValue = float4(colourValue,colourValue,colourValue,1);
+        
+        SphereTexture[id] = clamp(SphereTexture[id] + pixelValue, 0 ,1);
     }
     else{
         SphereTexture[id] = SphereTexture[id];
