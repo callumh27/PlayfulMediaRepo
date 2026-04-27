@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 // EarthGenerator Class
@@ -25,7 +26,7 @@ public class EarthGenerator : MonoBehaviour
 
     [Header("Tectonic Settings")]
     public int amountOfPlates = 9;
-    public TectonicPlate[] tectonicPlates;
+    public List<TectonicPlate> tectonicPlates;
     public RenderTexture renderTexture;
     public ComputeShader computeShader;
     public int renderTextureSize = 256;
