@@ -9,17 +9,14 @@ public class EarthPainterInspector : Editor
         DrawDefaultInspector();
 
         EarthLandPainter painter = (EarthLandPainter)target;
-        if (GUILayout.Button("Create New Earth Map"))
-        {
-            painter.CreateNewRenderTexture();
-        }
-        if (GUILayout.Button("Save Current Earth Map"))
-        {
-            painter.Save3DTexture();
-        }
+        
         if (GUILayout.Button("Generate Blank Sphere Map"))
         {
             painter.GenerateBlankSphereRenderTexture();
+        }
+        if (GUILayout.Button("Convert To Asset"))
+        {
+            painter.ConvertToAsset();
         }
     }
 }

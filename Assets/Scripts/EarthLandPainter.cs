@@ -1,8 +1,11 @@
 
+using Unity.Collections;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 
 public class EarthLandPainter : MonoBehaviour
@@ -86,39 +89,42 @@ public class EarthLandPainter : MonoBehaviour
     }
 
 
-    // generates blank 3D texture and stores it in the class
-    public void CreateNewRenderTexture()
-    {
-       
-        texture = new Texture3D(renderTextureSize, renderTextureSize, renderTextureSize, TextureFormat.RGBA32, false);
-        
-
-    }
-
-    // converts the 3D texture into a render texture and then saves it as an asset
-    public void Save3DTexture()
-    {
-        Graphics.CopyTexture(texture, renderTexture);
-        AssetDatabase.CreateAsset(renderTexture, "Assets/" + "EarthRenderTexture" + ".asset");
-
-    }
-
     public void GenerateBlankSphereRenderTexture()
     {
         renderTexture = new RenderTexture(renderTextureSize, renderTextureSize, 0);
         renderTexture.enableRandomWrite = true;
-        renderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R16G16B16A16_SFloat;
+        renderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8B8A8_SNorm;
         renderTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
         renderTexture.volumeDepth = renderTextureSize;
         renderTexture.filterMode = FilterMode.Point;
         renderTexture.Create();
 
-        AssetDatabase.CreateAsset(renderTexture, "Assets/Pre-Compute/" + "BlankEarthRenderTexture" + ".asset");
+        AssetDatabase.CreateAsset(renderTexture, "Assets/Pre-Compute/Cache/" + "BlankEarthRenderTexture" + ".asset");
 
         compute.SetTexture(0, "SphereTexture", renderTexture); // can use .FindKernel() method if using multiple kernels
         compute.SetInt("textureSize", renderTextureSize);
         compute.SetFloat("planetRadius", 10);
         compute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
+    }
+
+    // function needed because render textures are not serialisable
+    // found at https://discussions.unity.com/t/save-a-3d-render-texture-to-file/863563/4
+    public void ConvertToAsset()
+    {
+        int width = renderTexture.width;
+        int height = renderTexture.height;
+        int depth = renderTexture.volumeDepth;
+        var a = new NativeArray<byte>((width * height * depth) * 4, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+        AsyncGPUReadback.RequestIntoNativeArray(ref a, renderTexture, 0, (_) =>
+        {
+            Texture3D output = new Texture3D(width, height, depth, renderTexture.graphicsFormat, TextureCreationFlags.None);
+            output.SetPixelData(a, 0);
+            output.Apply(updateMipmaps: false, makeNoLongerReadable: true);
+            AssetDatabase.CreateAsset(output, "Assets/Pre-Compute/EarthTextures/" + "EarthMap.asset");
+            AssetDatabase.SaveAssetIfDirty(output);
+            a.Dispose();
+            renderTexture.Release();
+        });
     }
 
     public void SaveRenderTexture()
