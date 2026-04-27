@@ -10,7 +10,7 @@ public class TectonicEditorInspector : Editor
         DrawDefaultInspector();
 
         TectonicEditor editor = (TectonicEditor)target;
-        if (GUILayout.Button(""))
+        if (GUILayout.Button("Save Tectonic Map"))
         {
             
         }
