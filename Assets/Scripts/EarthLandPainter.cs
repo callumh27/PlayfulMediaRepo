@@ -17,6 +17,8 @@ public class EarthLandPainter : MonoBehaviour
     public float radius = 5f;
     [Range(0f, 1f)]
     public float strength = 1f;
+    [Range(3f, 10f)]
+    public float falloff = 4f;
 
     [Header("Properties")]
     [SerializeField] private Camera mainCamera;
@@ -62,6 +64,7 @@ public class EarthLandPainter : MonoBehaviour
 
                 paintCompute.SetFloat("currentBrushRadius", radius);
                 paintCompute.SetFloat("brushStrength", strength);
+                paintCompute.SetFloat("falloff", falloff);
                 paintCompute.SetVector("currentBrushPosition", hit.point);
                 paintCompute.SetTexture(0, "SphereTexture", renderTexture);
                 paintCompute.SetFloat("planetRadius", 20);
@@ -74,6 +77,7 @@ public class EarthLandPainter : MonoBehaviour
             {
                 paintCompute.SetFloat("currentBrushRadius", radius);
                 paintCompute.SetFloat("brushStrength", strength);
+                paintCompute.SetFloat("falloff", falloff);
                 paintCompute.SetVector("currentBrushPosition", hit.point);
                 paintCompute.SetTexture(0, "SphereTexture", renderTexture);
                 paintCompute.SetFloat("planetRadius", 20);
