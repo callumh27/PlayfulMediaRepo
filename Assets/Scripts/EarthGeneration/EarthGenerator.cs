@@ -103,7 +103,6 @@ public class EarthGenerator : MonoBehaviour
         renderTexture.filterMode = FilterMode.Point;
         renderTexture.Create();
 
-
         Vector4[] tectonicPlates = new Vector4[amountOfPlates];
         Vector4[] tectonicPoints = new Vector4[amountOfPlates];
 

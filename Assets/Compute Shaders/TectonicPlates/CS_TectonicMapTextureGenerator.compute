@@ -2,7 +2,6 @@
 
 RWTexture3D<float4> TectonicLookupTexture;
 
-const float FLT_MAX = 10000000;
 
 int amountOfPlates;
 
@@ -36,9 +35,8 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
         int closestPointIndex = -1;
         float closestDistance = 1000000;
         
-        for (int i = 0; i < amountOfPlates; i++)
+        for (int i = 0; i < tectonicPoints.length; i++)
         {
-            
             if (distance(worldPos, tectonicPoints[i].xyz) < closestDistance)
             {
                 closestPointIndex = i;
