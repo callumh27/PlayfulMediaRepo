@@ -22,10 +22,6 @@ void CSMain(uint3 id : SV_DispatchThreadID)
     // check if the distance between the two positions is less than the radius of the brush
     // if so paint
     
-    //float3 brushTexturePos = (currentBrushPosition / float(textureSize - 1.0) - 0.5f) * planetRadius;
-    //float3 brushTexturePos = (currentBrushPosition / float(planetRadius) - 0.5f) * textureSize;
-    //float brushTextureRadius = (currentBrushRadius / float(planetRadius) - 0.5f) * textureSize;
-    //float3 pixelTexturePos = (id / float(textureSize - 1.0) - 0.5f) * planetRadius;
 
     float3 pixelWorldPos = (id / float(textureSize - 1.0) - 0.5f) * planetRadius * 2;
 

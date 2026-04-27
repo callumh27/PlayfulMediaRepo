@@ -21,9 +21,5 @@ public class EarthPainterInspector : Editor
         {
             painter.GenerateBlankSphereRenderTexture();
         }
-        if (GUILayout.Button("Save Blank Earth Map"))
-        {
-            painter.SaveRenderTexture();
-        }
     }
 }

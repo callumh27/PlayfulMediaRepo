@@ -66,33 +66,6 @@ public class EarthLandPainter : MonoBehaviour
                 paintCompute.SetInt("addOrSubtract", 1);
                 paintCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
 
-                /*float unit = renderTextureSize / 20f;
-
-                Vector3 textureSpace = new Vector3(hit.point.x - hit.point.x * 0.5f, hit.point.y - hit.point.y * 0.5f, hit.point.z - hit.point.z * 0.5f) * unit;
-                float textureSpaceRadius = radius * unit;
-
-
-                float rSquared = textureSpaceRadius * textureSpaceRadius;
-
-                for (int u = (int)(textureSpace.x - textureSpaceRadius); u < (int)(textureSpace.x + textureSpaceRadius) + 1; u++)
-                {
-                    for (int v = (int)(textureSpace.y - textureSpaceRadius); v < (int)(textureSpace.y + textureSpaceRadius) + 1; v++)
-                    {
-                        for (int w = (int)(textureSpace.z - textureSpaceRadius); w < (int)(textureSpace.z + textureSpaceRadius) + 1; w++)
-                        {
-                            if ((textureSpace.x - u) * (textureSpace.x - u) + (textureSpace.y - v) * (textureSpace.y - v) + (textureSpace.z - w) * (textureSpace.z - w) < rSquared) {
-                                if (new Vector3(u,v,w).magnitude >= 8 && new Vector3(u, v, w).magnitude <= 12)
-                                {
-                                    texture.SetPixel(u, v, w, new Color(0.0f, 0.0f, 0.0f, 1.0f));
-                                }
-                                //Vector3 convertedWorldPos = new Vector3(u - 0.5f, v - 0.5f, w - 0.5f) / (renderTextureSize - 1.0f);
-                                //Vector3 texturePos = convertedWorldPos * 10;
-                                
-                            }
-                        }
-                    }
-                }
-                texture.Apply();*/
             }
             else if (Mouse.current.rightButton.IsPressed())
             {
