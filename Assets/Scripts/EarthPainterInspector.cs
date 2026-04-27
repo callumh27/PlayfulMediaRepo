@@ -15,6 +15,14 @@ public class EarthPainterInspector : Editor
         }
         if (GUILayout.Button("Save Current Earth Map"))
         {
+            painter.Save3DTexture();
+        }
+        if (GUILayout.Button("Generate Blank Sphere Map"))
+        {
+            painter.GenerateBlankSphereRenderTexture();
+        }
+        if (GUILayout.Button("Save Blank Earth Map"))
+        {
             painter.SaveRenderTexture();
         }
     }
