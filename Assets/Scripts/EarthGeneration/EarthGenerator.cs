@@ -3,6 +3,14 @@ using UnityEngine;
 // EarthGenerator Class
 // Handles the generation of the Earth mesh by generating 6 seperate sides of a cube and then spherising it by normalising the position of each vertex
 
+public class TectonicPlate
+{
+    public int plateID;
+    public Color displayColour;
+    public Vector3 plateDirection;
+    public bool isOceanic;
+}
+
 public class EarthGenerator : MonoBehaviour
 {
     [Range(2, 256)]
@@ -17,6 +25,7 @@ public class EarthGenerator : MonoBehaviour
 
     [Header("Tectonic Settings")]
     public int amountOfPlates = 9;
+    public TectonicPlate[] tectonicPlates;
     public RenderTexture renderTexture;
     public ComputeShader computeShader;
     public int renderTextureSize = 256;
@@ -102,7 +111,7 @@ public class EarthGenerator : MonoBehaviour
         {
             tectonicPoints[i] = UnityEngine.Random.onUnitSphere * 10f;
             tectonicPlates[i] = new Vector4(UnityEngine.Random.Range(0f, 1.0f), UnityEngine.Random.Range(0f, 1.0f), UnityEngine.Random.Range(0f, 1.0f), 1);
-            Debug.Log(tectonicPlates[i]);
+            
         }
 
         

@@ -6,11 +6,19 @@ const float FLT_MAX = 10000000;
 
 int amountOfPlates;
 
-float4 tectonicPoints[25];
+float4 tectonicPoints[1024];
 float4 tectonicColours[25];
 
 int textureSize;
 float planetRadius;
+
+struct TectonicPlate
+{
+    float4 colour;
+};
+
+TectonicPlate tectonicPlates[25];
+
 
 [numthreads(8,8,8)]
 void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
@@ -21,8 +29,6 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
     float maxD = length(float3(halfRadius, halfRadius, halfRadius));
     
     float pixelValue = length(worldPos) / (maxD + 1) - 0.5f;
-    
-    TectonicLookupTexture[id] = pixelValue;
     
     // pixelValue == 0 is the surface of the sphere
     if (pixelValue > -0.01f && pixelValue < 0.01f)
