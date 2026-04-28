@@ -10,6 +10,10 @@ public class TectonicEditorInspector : Editor
         DrawDefaultInspector();
 
         TectonicEditor editor = (TectonicEditor)target;
+        if (GUILayout.Button("Generate Render Texture"))
+        {
+            editor.GenerateRenderTexture();
+        }
         if (GUILayout.Button("Save Tectonic Map"))
         {
             

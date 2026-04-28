@@ -4,6 +4,14 @@ using UnityEngine.Experimental.Rendering;
 using UnityEngine.InputSystem;
 
 
+public class TectonicPlate
+{
+    public int plateID;
+    public Color displayColour;
+    public Vector3 plateDirection;
+    public bool isOceanic;
+}
+
 public class TectonicEditor : MonoBehaviour
 {
     public bool isEnabled;
@@ -53,27 +61,16 @@ public class TectonicEditor : MonoBehaviour
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, earthLayer))
             {
                 position = hit.point;
-                if (Mouse.current.leftButton.IsPressed())
-                {
-                    //user is currently painting on the surface of the Earth,
+                if (Mouse.current.leftButton.IsPressed()){
 
-                    // convert world space coordinates into texture space coordinates using:
-                    // radius of the Earth and the size of the texture
-                    // planetRadius/textureSize
-                    // 20 / 256 = 0.078125 == 1 unit
-
-                    // multiply the unit by the world position vector to get the texture position
-
-
-                    paintCompute.SetFloat("currentBrushRadius", radius);
-                    paintCompute.SetFloat("brushStrength", strength);
-                    paintCompute.SetFloat("falloff", falloff);
-                    paintCompute.SetVector("currentBrushPosition", hit.point);
-                    paintCompute.SetTexture(0, "SphereTexture", renderTexture);
-                    paintCompute.SetFloat("planetRadius", 20);
-                    paintCompute.SetInt("textureSize", renderTextureSize);
-                    paintCompute.SetInt("addOrSubtract", 1);
-                    paintCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
+                    tectonicPainterCompute.SetFloat("currentBrushRadius", radius);
+                    tectonicPainterCompute.SetFloat("brushStrength", strength);
+                    tectonicPainterCompute.SetFloat("falloff", falloff);
+                    tectonicPainterCompute.SetVector("currentBrushPosition", hit.point);
+                    tectonicPainterCompute.SetTexture(0, "SphereTexture", renderTexture);
+                    tectonicPainterCompute.SetFloat("planetRadius", 20);
+                    tectonicPainterCompute.SetInt("textureSize", renderTextureSize);
+                    tectonicPainterCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
 
                 }
                 
@@ -99,7 +96,7 @@ public class TectonicEditor : MonoBehaviour
 
             float x = Mathf.Cos(theta) * r;
             float z = Mathf.Sin(theta) * r;
-            tectonicPoints[i] = new Vector4(x,y,z,0);
+            tectonicPoints[i] = new Vector4(x,y,z,0) * 10f;
         }
 
 
@@ -118,8 +115,15 @@ public class TectonicEditor : MonoBehaviour
         renderTexture.filterMode = FilterMode.Point;
         renderTexture.Create();
 
+        GenerateTectonicPoints();
 
-        tectonicCompute.SetTexture(0, "TectonicMapTexture", renderTexture);
+        tectonicCompute.SetTexture(0, "TectonicLookupTexture", renderTexture);
+        tectonicCompute.SetVectorArray("tectonicPoints", tectonicPoints);
+        tectonicCompute.SetFloat("planetRadius", 20);
+        tectonicCompute.SetInt("textureSize", renderTextureSize);
+
+        tectonicCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
+
 
     }
     public void SaveTectonicMap()
