@@ -29,21 +29,21 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
     
     float pixelValue = length(worldPos) / (maxD + 1) - 0.5f;
     
-    for (int i = 0; i < 256; i++)
+    /*for (int i = 0; i < 256; i++)
         {
             if (distance(worldPos, tectonicPoints[i].xyz) < 0.25f)
             {
                 TectonicLookupTexture[id] = float4(tectonicPoints[i].w,tectonicPoints[i].w,tectonicPoints[i].w,1);//tectonicColours[closestPointIndex];
             }
-        }
+        }*/
 
     // pixelValue == 0 is the surface of the sphere
     if (pixelValue > -0.01f && pixelValue < 0.01f)
     { // is a surface point
         int closestPointIndex = -1;
         float closestDistance = 1000000;
-        
-        /*for (int i = 0; i < tectonicPoints.Length; i++)
+        // TODO: refactor this so that it is spread across threads for faster execution
+        for (int i = 0; i < tectonicPoints.Length; i++)
         {
             if (distance(worldPos, tectonicPoints[i].xyz) < closestDistance)
             {
@@ -52,7 +52,13 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
 
             }
         }
-        */
+
+        TectonicLookupTexture[id] = float4(
+            tectonicPoints[closestPointIndex].w,
+            tectonicPoints[closestPointIndex].w,
+            tectonicPoints[closestPointIndex].w,
+            1);
+        
         
         
     

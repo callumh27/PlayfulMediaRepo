@@ -145,10 +145,6 @@ public class TectonicEditor : MonoBehaviour
         if(!tectonicPointBuffer.IsValid()) return;
         
         tectonicPointBuffer.GetData(tectonicPoints);
-        for(int i = 0; i < tectonicPoints.Length; i++)
-        {
-            Debug.Log(tectonicPoints[i]);
-        }
         tectonicCompute.SetTexture(0, "TectonicLookupTexture", renderTexture);
         tectonicCompute.SetVectorArray("tectonicPoints", tectonicPoints);
         tectonicCompute.SetFloat("planetRadius", 40);
