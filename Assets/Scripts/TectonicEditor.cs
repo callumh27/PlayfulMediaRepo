@@ -107,7 +107,7 @@ public class TectonicEditor : MonoBehaviour
 
             float x = Mathf.Cos(theta) * r;
             float z = Mathf.Sin(theta) * r;
-            tectonicPoints[i] = new Vector4(x,y,z,0) * 10f;
+            tectonicPoints[i] = new Vector4(x,y,z,0) * 20f;
         }
 
 
@@ -151,7 +151,7 @@ public class TectonicEditor : MonoBehaviour
         }
         tectonicCompute.SetTexture(0, "TectonicLookupTexture", renderTexture);
         tectonicCompute.SetVectorArray("tectonicPoints", tectonicPoints);
-        tectonicCompute.SetFloat("planetRadius", 20);
+        tectonicCompute.SetFloat("planetRadius", 40);
         tectonicCompute.SetInt("textureSize", renderTextureSize);
 
         tectonicCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);

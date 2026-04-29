@@ -9,6 +9,8 @@ float currentBrushRadius;
 [numthreads(8,1,1)]
 void TectonicPaint (uint3 id : SV_DispatchThreadID)
 {
+
+    int totalNumberOfThreads = 32 * 8; // 32 thread groups and 8 threads per group
     // how much of the array is allocated this thread
     int threadArrayLength = tectonicPoints.Length / 8;
 
