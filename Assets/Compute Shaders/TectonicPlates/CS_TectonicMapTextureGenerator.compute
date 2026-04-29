@@ -29,11 +29,11 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
     
     float pixelValue = length(worldPos) / (maxD + 1) - 0.5f;
     
-for (int i = 0; i < tectonicPoints.Length; i++)
+    for (int i = 0; i < 256; i++)
         {
             if (distance(worldPos, tectonicPoints[i].xyz) < 0.25f)
             {
-                TectonicLookupTexture[id] = float4(0,0,1,1);//tectonicColours[closestPointIndex];
+                TectonicLookupTexture[id] = float4(tectonicPoints[i].w,tectonicPoints[i].w,tectonicPoints[i].w,1);//tectonicColours[closestPointIndex];
             }
         }
 

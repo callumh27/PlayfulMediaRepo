@@ -24,6 +24,8 @@ public class TectonicEditor : MonoBehaviour
     [Range(3f, 10f)]
     public float falloff = 4f;
 
+    public float currentTectonicColour = 0.1f;
+
     [Header("Current Map Settings")]
     public int amountOfTectonicPoints = 1024;
     public List<TectonicPlate> tectonicPlates = new List<TectonicPlate>(0);
@@ -39,7 +41,7 @@ public class TectonicEditor : MonoBehaviour
     public ComputeShader tectonicCompute;
     public ComputeShader tectonicPainterCompute;
 
-
+    private ComputeBuffer tectonicPointBuffer;
     private Vector4[] tectonicPoints;
     private int renderTextureSize = 256;
     [SerializeField] private Camera mainCamera;
@@ -59,20 +61,29 @@ public class TectonicEditor : MonoBehaviour
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, earthLayer))
+        {
+            //somehow need to get points in the tectonicPoints array that are within the radius
+            //of the ray hit point
+            position = hit.point;
+            if (Mouse.current.leftButton.IsPressed()){
+
+                Debug.Log("Has hit the earth");
+
+                tectonicPainterCompute.SetFloat("currentBrushRadius", radius);
+                tectonicPainterCompute.SetFloat("currentPaintIndex", currentTectonicColour);
+                tectonicPainterCompute.SetVector("currentBrushPosition", hit.point);
+                tectonicPainterCompute.SetBuffer(0, "tectonicPoints", tectonicPointBuffer);
+                tectonicPainterCompute.Dispatch(0, tectonicPoints.Length / 8, 1, 1);
+
+                
+
+            }
+            else if (Mouse.current.leftButton.wasReleasedThisFrame)
             {
-                position = hit.point;
-                if (Mouse.current.leftButton.IsPressed()){
-
-                    tectonicPainterCompute.SetFloat("currentBrushRadius", radius);
-                    tectonicPainterCompute.SetFloat("brushStrength", strength);
-                    tectonicPainterCompute.SetFloat("falloff", falloff);
-                    tectonicPainterCompute.SetVector("currentBrushPosition", hit.point);
-                    tectonicPainterCompute.SetTexture(0, "SphereTexture", renderTexture);
-                    tectonicPainterCompute.SetFloat("planetRadius", 20);
-                    tectonicPainterCompute.SetInt("textureSize", renderTextureSize);
-                    tectonicPainterCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
-
-                }
+                // this allows for painting probably but it also means that we cant see
+                // paint changes until after a brush stroke, peak
+                //tectonicPointBuffer.Release();
+            }
                 
                             
             }
@@ -82,7 +93,7 @@ public class TectonicEditor : MonoBehaviour
 
     }
 
-    // generate a certain amount of equally generated points and randomly skew them
+    // generate a certain amount of equally spaced points and randomly skew them
     public void GenerateTectonicPoints()
     {
         tectonicPoints = new Vector4[amountOfTectonicPoints];
@@ -117,12 +128,10 @@ public class TectonicEditor : MonoBehaviour
 
         GenerateTectonicPoints();
 
-        tectonicCompute.SetTexture(0, "TectonicLookupTexture", renderTexture);
-        tectonicCompute.SetVectorArray("tectonicPoints", tectonicPoints);
-        tectonicCompute.SetFloat("planetRadius", 20);
-        tectonicCompute.SetInt("textureSize", renderTextureSize);
+        tectonicPointBuffer = new ComputeBuffer(tectonicPoints.Length, sizeof(float)*4);
+        tectonicPointBuffer.SetData(tectonicPoints);
 
-        tectonicCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
+        UpdateTectonicLookupTexture();
 
 
     }
@@ -130,4 +139,37 @@ public class TectonicEditor : MonoBehaviour
     {
         
     }
+
+    public void UpdateTectonicLookupTexture()
+    {
+        if(!tectonicPointBuffer.IsValid()) return;
+        
+        tectonicPointBuffer.GetData(tectonicPoints);
+        for(int i = 0; i < tectonicPoints.Length; i++)
+        {
+            Debug.Log(tectonicPoints[i]);
+        }
+        tectonicCompute.SetTexture(0, "TectonicLookupTexture", renderTexture);
+        tectonicCompute.SetVectorArray("tectonicPoints", tectonicPoints);
+        tectonicCompute.SetFloat("planetRadius", 20);
+        tectonicCompute.SetInt("textureSize", renderTextureSize);
+
+        tectonicCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!isEnabled) return;
+
+        Gizmos.color = new Color(1f, 0f, 0f, 0.2f);
+
+        Gizmos.DrawSphere(position, radius);
+
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(position, radius);
+
+
+    }
+
 }
+

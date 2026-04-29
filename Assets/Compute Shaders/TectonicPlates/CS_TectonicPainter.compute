@@ -1,26 +1,23 @@
 #pragma kernel TectonicPaint
 
-RWTexture3D<float4> TectonicMap;
-
-int textureSize;
-float planetRadius;
+RWStructuredBuffer<float4> tectonicPoints;
 
 float currentPaintIndex;
 float3 currentBrushPosition;
 float currentBrushRadius;
-float brushStrength;
 
-[numthreads(8,8,8)]
+[numthreads(8,1,1)]
 void TectonicPaint (uint3 id : SV_DispatchThreadID)
 {
-    float3 pixelWorldPos = (id / float(textureSize - 1.0) - 0.5f) * planetRadius * 2;
-    float distanceFromCentreOfBrush = length(currentBrushPosition - pixelWorldPos);
+    // how much of the array is allocated this thread
+    int threadArrayLength = tectonicPoints.Length / 8;
 
-    if (distanceFromCentreOfBrush < currentBrushRadius && TectonicMap[id].y == 1){
-
-        TectonicMap[id] = currentPaintColour;
-    }
-    else{
-        TectonicMap[id] = TectonicMap[id];
+    for (int i = threadArrayLength * id.x; i < threadArrayLength * id.x + threadArrayLength - 1; i++)
+    {
+        float distanceFromCentreOfBrush = length(currentBrushPosition - tectonicPoints[i].xyz);
+        if (distanceFromCentreOfBrush < currentBrushRadius)
+        {
+            tectonicPoints[i] = float4(tectonicPoints[i].x,tectonicPoints[i].y,tectonicPoints[i].z, currentPaintIndex);
+        }
     }
 }
