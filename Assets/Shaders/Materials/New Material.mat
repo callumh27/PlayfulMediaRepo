@@ -124,12 +124,12 @@ Material:
     - _TerrainLacunarity: 4.59
     - _TerrainNoiseScale: 1.93
     - _TerrainPersistence: 0.196
-    - _ViewTectonics: 0
+    - _ViewTectonics: 1
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
-    - _debugTec: 0.48
-    - _debugTextureOffset: 0.5
+    - _debugTec: 0.44
+    - _debugTextureOffset: 1.14
     m_Colors:
     - _AltitudeRanges: {r: 16.6, g: 19.2, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}

@@ -524,16 +524,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TectonicEditor
   isEnabled: 0
+  position: {x: 0, y: 0, z: 0}
   radius: 5
-  strength: 1
-  falloff: 4
-  currentTectonicColour: 0.1
   amountOfTectonicPoints: 256
+  tectonicPlates: []
   mapYear: 
   renderTexture: {fileID: 0}
-  currentPlateIndex: 0
-  plateDirection: {x: 0, y: 0, z: 0}
-  isOceanic: 0
+  currentTectonicIndex: 0
   tectonicCompute: {fileID: 7200000, guid: a29bf2a5089d23643afcbaaaf7f25745, type: 3}
   tectonicPainterCompute: {fileID: 7200000, guid: a5e83c00df415984e8fb2e1a251aee65, type: 3}
   mainCamera: {fileID: 2057630585}
@@ -541,7 +538,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   earthMaterial: {fileID: 2100000, guid: b0db3d3dcd0d42742b5557dc60e3f9eb, type: 2}
-  position: {x: 0, y: 0, z: 0}
 --- !u!4 &1220902116
 Transform:
   m_ObjectHideFlags: 0

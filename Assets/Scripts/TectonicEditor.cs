@@ -1,13 +1,13 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.InputSystem;
 
-
-public class TectonicPlate
+[Serializable]
+public struct TectonicPlate
 {
     public int plateID;
-    public Color displayColour;
     public Vector3 plateDirection;
     public bool isOceanic;
 }
@@ -15,39 +15,33 @@ public class TectonicPlate
 public class TectonicEditor : MonoBehaviour
 {
     public bool isEnabled;
+    public Vector3 position = Vector3.zero;
 
     [Header("Controls")]
     [Range(0.1f, 20)]
     public float radius = 5f;
-    [Range(0f, 1f)]
-    public float strength = 1f;
-    [Range(3f, 10f)]
-    public float falloff = 4f;
 
-    public float currentTectonicColour = 0.1f;
 
     [Header("Current Map Settings")]
-    public int amountOfTectonicPoints = 1024;
+    public int amountOfTectonicPoints = 256;
     public List<TectonicPlate> tectonicPlates = new List<TectonicPlate>(0);
     public string mapYear;
     public RenderTexture renderTexture;
 
-    [Header("Current Tectonic Plate")]
-    public int currentPlateIndex = 0;
-    public Vector3 plateDirection;
-    public bool isOceanic;
+    public int currentTectonicIndex = 0;
 
     [Header("Prerequisites")]
     public ComputeShader tectonicCompute;
     public ComputeShader tectonicPainterCompute;
+    [SerializeField] private Camera mainCamera;
+    [SerializeField] private LayerMask earthLayer;
+    public Material earthMaterial;
+    
 
     private ComputeBuffer tectonicPointBuffer;
     private Vector4[] tectonicPoints;
     private int renderTextureSize = 256;
-    [SerializeField] private Camera mainCamera;
-    [SerializeField] private LayerMask earthLayer;
-    public Material earthMaterial;
-    public Vector3 position = Vector3.zero;
+    
 
     void Update()
     {
@@ -67,10 +61,8 @@ public class TectonicEditor : MonoBehaviour
             position = hit.point;
             if (Mouse.current.leftButton.IsPressed()){
 
-                Debug.Log("Has hit the earth");
-
                 tectonicPainterCompute.SetFloat("currentBrushRadius", radius);
-                tectonicPainterCompute.SetFloat("currentPaintIndex", currentTectonicColour);
+                tectonicPainterCompute.SetFloat("currentPaintIndex", (float)currentTectonicIndex / (float)tectonicPlates.Count);
                 tectonicPainterCompute.SetVector("currentBrushPosition", hit.point);
                 tectonicPainterCompute.SetBuffer(0, "tectonicPoints", tectonicPointBuffer);
                 tectonicPainterCompute.Dispatch(0, tectonicPoints.Length / 8, 1, 1);
@@ -147,10 +139,12 @@ public class TectonicEditor : MonoBehaviour
         tectonicPointBuffer.GetData(tectonicPoints);
         tectonicCompute.SetTexture(0, "TectonicLookupTexture", renderTexture);
         tectonicCompute.SetVectorArray("tectonicPoints", tectonicPoints);
+        
         tectonicCompute.SetFloat("planetRadius", 40);
         tectonicCompute.SetInt("textureSize", renderTextureSize);
 
         tectonicCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
+        earthMaterial.SetTexture("_TectonicTexture", renderTexture);
     }
 
     private void OnDrawGizmos()
