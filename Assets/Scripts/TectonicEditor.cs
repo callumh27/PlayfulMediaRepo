@@ -67,7 +67,7 @@ public class TectonicEditor : MonoBehaviour
                 tectonicPainterCompute.SetBuffer(0, "tectonicPoints", tectonicPointBuffer);
                 tectonicPainterCompute.Dispatch(0, tectonicPoints.Length / 8, 1, 1);
 
-                
+                UpdateTectonicLookupTexture();
 
             }
             else if (Mouse.current.leftButton.wasReleasedThisFrame)
@@ -139,7 +139,7 @@ public class TectonicEditor : MonoBehaviour
         tectonicPointBuffer.GetData(tectonicPoints);
         tectonicCompute.SetTexture(0, "TectonicLookupTexture", renderTexture);
         tectonicCompute.SetVectorArray("tectonicPoints", tectonicPoints);
-        
+
         tectonicCompute.SetFloat("planetRadius", 40);
         tectonicCompute.SetInt("textureSize", renderTextureSize);
 
