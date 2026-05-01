@@ -14,7 +14,7 @@ void TectonicPaint (uint3 id : SV_DispatchThreadID)
     // how much of the array is allocated this thread
     int threadArrayLength = tectonicPoints.Length / 8;
 
-    for (int i = threadArrayLength * id.x; i < threadArrayLength * id.x + threadArrayLength - 1; i++)
+    for (int i = threadArrayLength * id.x; i < threadArrayLength * id.x + threadArrayLength; i++)
     {
         float distanceFromCentreOfBrush = length(currentBrushPosition - tectonicPoints[i].xyz);
         if (distanceFromCentreOfBrush < currentBrushRadius)
