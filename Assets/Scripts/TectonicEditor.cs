@@ -93,11 +93,11 @@ public class TectonicEditor : MonoBehaviour
 
         for(int i = 0; i < amountOfTectonicPoints; i++)
         {
-            float y = 1f - (i / (float)(amountOfTectonicPoints - 1)) * 2f;
+            float y = (1f - (i / (float)(amountOfTectonicPoints - 1)) * 2f) + UnityEngine.Random.Range(-1.0f, 1.0f);
             float r = Mathf.Sqrt(1f - y * y);
             float theta = phi * i;
 
-            float x = Mathf.Cos(theta) * r;
+            float x = Mathf.Cos(theta) * r  ;
             float z = Mathf.Sin(theta) * r;
             tectonicPoints[i] = new Vector4(x,y,z,0) * 20f;
         }
