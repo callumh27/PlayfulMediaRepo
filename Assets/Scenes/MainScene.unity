@@ -533,6 +533,7 @@ MonoBehaviour:
   currentTectonicIndex: 0
   tectonicCompute: {fileID: 7200000, guid: a29bf2a5089d23643afcbaaaf7f25745, type: 3}
   tectonicPainterCompute: {fileID: 7200000, guid: a5e83c00df415984e8fb2e1a251aee65, type: 3}
+  plateBoundariesCompute: {fileID: 7200000, guid: b6840024747daef4ca63b738a89b9b99, type: 3}
   mainCamera: {fileID: 2057630585}
   earthLayer:
     serializedVersion: 2
