@@ -90,13 +90,13 @@ public class EarthGenerator : MonoBehaviour
     public void CalculateTectonicPoints(out Vector4[] colours, out Vector4[] points)
     {
 
-        renderTexture = new RenderTexture(renderTextureSize, renderTextureSize, 0);
-        renderTexture.enableRandomWrite = true;
-        renderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R16G16B16A16_SFloat;
-        renderTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
-        renderTexture.volumeDepth = renderTextureSize;
-        renderTexture.filterMode = FilterMode.Point;
-        renderTexture.Create();
+        tectonicMap = new RenderTexture(renderTextureSize, renderTextureSize, 0);
+        tectonicMap.enableRandomWrite = true;
+        tectonicMap.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R16G16B16A16_SFloat;
+        tectonicMap.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
+        tectonicMap.volumeDepth = renderTextureSize;
+        tectonicMap.filterMode = FilterMode.Point;
+        tectonicMap.Create();
 
 
         Vector4[] tectonicPlates = new Vector4[amountOfPlates];
@@ -115,13 +115,13 @@ public class EarthGenerator : MonoBehaviour
         colours = tectonicPlates;
         points = tectonicPoints;
 
-        computeShader.SetTexture(0, "TectonicLookupTexture", renderTexture); // can use .FindKernel() method if using multiple kernels
+        computeShader.SetTexture(0, "TectonicLookupTexture", tectonicMap); // can use .FindKernel() method if using multiple kernels
         computeShader.SetInt("textureSize", renderTextureSize);
         computeShader.SetInt("amountOfPlates", amountOfPlates);
         computeShader.SetFloat("planetRadius", 10);
         computeShader.SetVectorArray("tectonicPoints", points);
         computeShader.SetVectorArray("tectonicColours", colours);
-        computeShader.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
+        computeShader.Dispatch(0, tectonicMap.width / 8, tectonicMap.height / 8, tectonicMap.volumeDepth / 8);
 
 
 
