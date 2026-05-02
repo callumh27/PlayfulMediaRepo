@@ -18,7 +18,10 @@ public class TectonicEditorInspector : Editor
         {
             editor.UpdateTectonicLookupTexture();
         }
-        
+        if (GUILayout.Button("Update Plate Boundaries"))
+        {
+            editor.UpdatePlateBoundaries();
+        }
         if (GUILayout.Button("Save Tectonic Map"))
         {
             

@@ -1,7 +1,11 @@
 #pragma kernel TectonicsGenerator
 
 RWTexture3D<float4> TectonicLookupTexture;
-
+/*
+R = plateId
+G = oceanic
+B = plate boundaries
+*/
 
 int amountOfPlates;
 
@@ -59,14 +63,10 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
             tectonicPoints[closestPointIndex].w,
             1);
         
-        
-        
-    
-    
-        
-        
     }
-        
+    else{
+        TectonicLookupTexture[id] = float4(0,0,0,0);
+    }
         
         
 }

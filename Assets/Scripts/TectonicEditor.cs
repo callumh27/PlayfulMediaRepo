@@ -33,6 +33,7 @@ public class TectonicEditor : MonoBehaviour
     [Header("Prerequisites")]
     public ComputeShader tectonicCompute;
     public ComputeShader tectonicPainterCompute;
+    public ComputeShader plateBoundariesCompute;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private LayerMask earthLayer;
     public Material earthMaterial;
@@ -144,7 +145,15 @@ public class TectonicEditor : MonoBehaviour
         tectonicCompute.SetInt("textureSize", renderTextureSize);
 
         tectonicCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
+        // possibly make this a parameter
         earthMaterial.SetTexture("_TectonicTexture", renderTexture);
+    }
+
+    //im sure there is a much more efficient way of doing this that allows for auto-update
+    public void UpdatePlateBoundaries()
+    {
+        plateBoundariesCompute.SetTexture(0, "TectonicTexture", renderTexture);
+        plateBoundariesCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
     }
 
     private void OnDrawGizmos()
