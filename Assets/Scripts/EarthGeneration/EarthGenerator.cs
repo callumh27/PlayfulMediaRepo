@@ -18,6 +18,12 @@ public class EarthGenerator : MonoBehaviour
     [Header("Climate Settings")]
     public int temperature = 30;
 
+    [Header("Tectonic Settings")]
+    public int amountOfPlates = 9;
+    public TectonicPlate[] tectonicPlates;
+    public RenderTexture tectonicMap;
+    public RenderTexture landmassMap;
+    public ComputeShader computeShader;
     public int renderTextureSize = 256;
 
     MeshFilter[] meshFilters;
@@ -75,11 +81,50 @@ public class EarthGenerator : MonoBehaviour
     {
         foreach (MeshFilter m in meshFilters)
         {
-            //m.GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TectonicTexture", renderTexture);
+            m.GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_TectonicTexture", tectonicMap);
+            m.GetComponent<MeshRenderer>().sharedMaterial.SetTexture("_LandmassTexture", landmassMap);
             m.GetComponent<MeshRenderer>().sharedMaterial.SetFloat("_PlanetRadius", earthRadius);
         }
     }
 
-    
+    public void CalculateTectonicPoints(out Vector4[] colours, out Vector4[] points)
+    {
+
+        renderTexture = new RenderTexture(renderTextureSize, renderTextureSize, 0);
+        renderTexture.enableRandomWrite = true;
+        renderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R16G16B16A16_SFloat;
+        renderTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
+        renderTexture.volumeDepth = renderTextureSize;
+        renderTexture.filterMode = FilterMode.Point;
+        renderTexture.Create();
+
+
+        Vector4[] tectonicPlates = new Vector4[amountOfPlates];
+        Vector4[] tectonicPoints = new Vector4[amountOfPlates];
+
+
+        for (int i = 0; i < amountOfPlates; i++)
+        {
+            tectonicPoints[i] = UnityEngine.Random.onUnitSphere * 10f;
+            tectonicPlates[i] = new Vector4(UnityEngine.Random.Range(0f, 1.0f), UnityEngine.Random.Range(0f, 1.0f), UnityEngine.Random.Range(0f, 1.0f), 1);
+            
+        }
+
+        
+
+        colours = tectonicPlates;
+        points = tectonicPoints;
+
+        computeShader.SetTexture(0, "TectonicLookupTexture", renderTexture); // can use .FindKernel() method if using multiple kernels
+        computeShader.SetInt("textureSize", renderTextureSize);
+        computeShader.SetInt("amountOfPlates", amountOfPlates);
+        computeShader.SetFloat("planetRadius", 10);
+        computeShader.SetVectorArray("tectonicPoints", points);
+        computeShader.SetVectorArray("tectonicColours", colours);
+        computeShader.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
+
+
+
+    }
 
 }

@@ -1,0 +1,44 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture3D<float4> SphereTexture;
+
+int textureSize;
+float planetRadius;
+
+float3 currentBrushPosition;
+float currentBrushRadius;
+float brushStrength;
+
+int addOrSubtract;
+
+[numthreads(8,8,8)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    // convert brush world position into texture position
+    // convert current pixel id to texture position
+    // check if the distance between the two positions is less than the radius of the brush
+    // if so paint
+    
+
+    float3 pixelWorldPos = (id / float(textureSize - 1.0) - 0.5f) * planetRadius * 2;
+
+    float distanceFromCentreOfBrush = length(currentBrushPosition - pixelWorldPos);
+
+    if (distanceFromCentreOfBrush < currentBrushRadius && SphereTexture[id].y == 1){
+
+        // linear fall off value
+        //float colourValue = (-(distanceFromCentreOfBrush / currentBrushRadius) + 1) * brushStrength * float(addOrSubtract);
+        // exponential fall off value
+        float colourValue = pow(2.71828, -(5.0*(distanceFromCentreOfBrush / currentBrushRadius))) * brushStrength * float(addOrSubtract);
+
+        float4 pixelValue = float4(colourValue,1,0,0);
+        
+        SphereTexture[id] = clamp(SphereTexture[id] + pixelValue, 0 ,1);
+    }
+    else{
+        SphereTexture[id] = SphereTexture[id];
+    }
+}

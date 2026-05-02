@@ -1,8 +1,15 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Compute Shaders/TectonicPlates.meta
 guid: c8faf3ebf88475b41af7a96ba1bf469f
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
+========
+guid: 01de3e1821378ba479c393827e57ded4
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11700000
+>>>>>>>> origin/earth:Assets/Pre-Compute/EarthTextures/EarthMap.asset.meta
   userData: 
   assetBundleName: 
   assetBundleVariant: 

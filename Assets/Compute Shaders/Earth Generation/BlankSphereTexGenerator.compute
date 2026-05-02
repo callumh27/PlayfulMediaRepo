@@ -19,7 +19,7 @@ void GenerateBlankSphereMap(uint3 id : SV_DispatchThreadID)
     // pixelValue == 0 is the surface of the sphere
     if (pixelValue > -0.01f && pixelValue < 0.01f)
     {
-        SphereTexture[id] = float4(0,0,0,1);
+        SphereTexture[id] = float4(0,1,0,0);
     } else{
         SphereTexture[id] = float4(0,0,0,0);
     }
