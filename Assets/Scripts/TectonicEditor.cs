@@ -10,6 +10,7 @@ public struct TectonicPlate
     public int plateID;
     public Vector3 plateDirection;
     public bool isOceanic;
+    public Color plateColour;
 }
 
 public class TectonicEditor : MonoBehaviour
@@ -61,9 +62,12 @@ public class TectonicEditor : MonoBehaviour
             //of the ray hit point
             position = hit.point;
             if (Mouse.current.leftButton.IsPressed()){
+                
+                
 
                 tectonicPainterCompute.SetFloat("currentBrushRadius", radius);
-                tectonicPainterCompute.SetFloat("currentPaintIndex", (float)currentTectonicIndex / (float)tectonicPlates.Count);
+                tectonicPainterCompute.SetInt("currentPaintIndex", currentTectonicIndex);
+                
                 tectonicPainterCompute.SetVector("currentBrushPosition", hit.point);
                 tectonicPainterCompute.SetBuffer(0, "tectonicPoints", tectonicPointBuffer);
                 tectonicPainterCompute.Dispatch(0, tectonicPoints.Length / 8, 1, 1);
@@ -137,12 +141,19 @@ public class TectonicEditor : MonoBehaviour
     {
         if(!tectonicPointBuffer.IsValid()) return;
         
+            Vector4[] tectonicColours = new Vector4[tectonicPlates.Count];
+            for(int i = 0; i < tectonicPlates.Count; i++)
+            {
+                tectonicColours[i] = new Vector4(tectonicPlates[i].plateColour.r, tectonicPlates[i].plateColour.g, tectonicPlates[i].plateColour.b, 0);
+            }
+
         tectonicPointBuffer.GetData(tectonicPoints);
         tectonicCompute.SetTexture(0, "TectonicLookupTexture", renderTexture);
         tectonicCompute.SetVectorArray("tectonicPoints", tectonicPoints);
-
+        tectonicCompute.SetVectorArray("tectonicColours", tectonicColours);
         tectonicCompute.SetFloat("planetRadius", 40);
         tectonicCompute.SetInt("textureSize", renderTextureSize);
+        tectonicCompute.SetInt("amountOfPlates", tectonicPlates.Count);
 
         tectonicCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
         // possibly make this a parameter

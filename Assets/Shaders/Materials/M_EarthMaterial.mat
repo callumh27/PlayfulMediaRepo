@@ -53,7 +53,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _LandmassTexture:
-        m_Texture: {fileID: 8400000, guid: c16f6e0ea976c58478ca3ef0a64c91e4, type: 2}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -134,7 +134,7 @@ Material:
     - _TerrainNoiseScale: 1.93
     - _TerrainPersistence: 0.196
     - _ViewPlateBoundaries: 1
-    - _ViewTectonics: 0
+    - _ViewTectonics: 1
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1

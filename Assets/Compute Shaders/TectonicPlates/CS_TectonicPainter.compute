@@ -2,7 +2,7 @@
 
 RWStructuredBuffer<float4> tectonicPoints;
 
-float currentPaintIndex;
+int currentPaintIndex;
 float3 currentBrushPosition;
 float currentBrushRadius;
 
