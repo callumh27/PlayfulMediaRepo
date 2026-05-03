@@ -4,7 +4,7 @@
 // with cs.SetTexture
 RWTexture3D<float4> TectonicTexture;
 
-float surroundingPixels[27];
+float3 surroundingPixels[27];
 
 [numthreads(8,8,8)]
 void CalculatePlateBoundaries (uint3 id : SV_DispatchThreadID)
@@ -20,7 +20,7 @@ void CalculatePlateBoundaries (uint3 id : SV_DispatchThreadID)
                     i++;
                 }
                 else{
-                    surroundingPixels[i] = TectonicTexture[id + float3(x,y,z)].x;
+                    surroundingPixels[i] = TectonicTexture[id + float3(x,y,z)].xyz;
                     i++;
                 }
                 
@@ -29,7 +29,7 @@ void CalculatePlateBoundaries (uint3 id : SV_DispatchThreadID)
     }
     for(int j = 0; j < surroundingPixels.Length; j++){
         if(surroundingPixels[j]){
-            if(surroundingPixels[j] != TectonicTexture[id].x){
+            if(surroundingPixels[j].xyz != TectonicTexture[id].xyz){
                 TectonicTexture[id] = float4(TectonicTexture[id].x, TectonicTexture[id].y,1,1);
                 break;
             }

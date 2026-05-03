@@ -58,9 +58,9 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
         }
 
         TectonicLookupTexture[id] = float4(
-            tectonicColours[closestPointIndex].w / amountOfPlates,
-            tectonicColours[closestPointIndex].w / amountOfPlates,
-            tectonicColours[closestPointIndex].w / amountOfPlates,
+            tectonicColours[tectonicPoints[closestPointIndex].w].x,
+            tectonicColours[tectonicPoints[closestPointIndex].w].y,
+            tectonicColours[tectonicPoints[closestPointIndex].w].z,
             1);
         
     }
