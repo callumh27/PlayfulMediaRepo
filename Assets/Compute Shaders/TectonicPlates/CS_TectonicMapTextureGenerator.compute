@@ -1,5 +1,8 @@
 #pragma kernel TectonicsGenerator
 
+// creates a texture of plateID
+
+
 RWTexture3D<float4> TectonicLookupTexture;
 /*
 R = plateId
@@ -57,10 +60,12 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
             }
         }
 
+
+
         TectonicLookupTexture[id] = float4(
-            tectonicColours[closestPointIndex].w / amountOfPlates,
-            tectonicColours[closestPointIndex].w / amountOfPlates,
-            tectonicColours[closestPointIndex].w / amountOfPlates,
+            tectonicPoints[closestPointIndex].w,
+            0,
+            TectonicLookupTexture[id].b,
             1);
         
     }

@@ -43,6 +43,7 @@ public class TectonicEditor : MonoBehaviour
     private ComputeBuffer tectonicPointBuffer;
     private Vector4[] tectonicPoints;
     private int renderTextureSize = 256;
+    public Texture2D plateColourLookup;
     
 
     void Update()
@@ -115,6 +116,8 @@ public class TectonicEditor : MonoBehaviour
 
         //generate tectonic points and plates here
 
+        plateColourLookup = new Texture2D(25, 1);
+
         renderTexture = new RenderTexture(renderTextureSize, renderTextureSize, 0);
         renderTexture.enableRandomWrite = true;
         renderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R16G16B16A16_SFloat;
@@ -132,6 +135,12 @@ public class TectonicEditor : MonoBehaviour
 
 
     }
+
+    public void UpdateTectonicPlateLookup()
+    {
+        plateColourLookup = new Texture2D(25, 1);
+    }
+
     public void SaveTectonicMap()
     {
         
@@ -141,11 +150,16 @@ public class TectonicEditor : MonoBehaviour
     {
         if(!tectonicPointBuffer.IsValid()) return;
         
-            Vector4[] tectonicColours = new Vector4[tectonicPlates.Count];
-            for(int i = 0; i < tectonicPlates.Count; i++)
-            {
-                tectonicColours[i] = new Vector4(tectonicPlates[i].plateColour.r, tectonicPlates[i].plateColour.g, tectonicPlates[i].plateColour.b, 0);
-            }
+        
+
+        Vector4[] tectonicColours = new Vector4[tectonicPlates.Count];
+        for(int i = 0; i < tectonicPlates.Count; i++)
+        {
+            tectonicColours[i] = new Vector4(tectonicPlates[i].plateColour.r, tectonicPlates[i].plateColour.g, tectonicPlates[i].plateColour.b, 0);
+            plateColourLookup.SetPixel(i,0, tectonicPlates[i].plateColour);
+        }
+
+
 
         tectonicPointBuffer.GetData(tectonicPoints);
         tectonicCompute.SetTexture(0, "TectonicLookupTexture", renderTexture);
@@ -155,9 +169,11 @@ public class TectonicEditor : MonoBehaviour
         tectonicCompute.SetInt("textureSize", renderTextureSize);
         tectonicCompute.SetInt("amountOfPlates", tectonicPlates.Count);
 
+
         tectonicCompute.Dispatch(0, renderTexture.width / 8, renderTexture.height / 8, renderTexture.volumeDepth / 8);
         // possibly make this a parameter
         earthMaterial.SetTexture("_TectonicTexture", renderTexture);
+        earthMaterial.SetTexture("_PlateColourLookupTexture", plateColourLookup);
     }
 
     //im sure there is a much more efficient way of doing this that allows for auto-update
