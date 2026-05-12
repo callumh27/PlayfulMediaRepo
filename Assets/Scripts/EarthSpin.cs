@@ -18,7 +18,7 @@ public class EarthSpin : MonoBehaviour
         {
             float xDelta = Input.mousePositionDelta.x;
             float yDelta = Input.mousePositionDelta.y;
-            rotationalVelocity = new Vector3(yDelta,-xDelta);
+            //rotationalVelocity = new Vector3(yDelta,-xDelta);
             Debug.Log(rotationalVelocity);
         }
         else if (Input.GetMouseButton(0))
@@ -26,14 +26,16 @@ public class EarthSpin : MonoBehaviour
             isMouseDown = true;
             float xDelta = Input.mousePositionDelta.x;
             float yDelta = Input.mousePositionDelta.y;
-            //rotationalVelocity = new Vector3(yDelta,-xDelta);
+            rotationalVelocity = new Vector3(yDelta,-xDelta) * dragStrength;
             transform.Rotate(new Vector3(0,1,0), xDelta * -dragStrength, Space.Self);
             //if (transform.rotation.eulerAngles.x < 25 && transform.eulerAngles.x > -25)
             //{
                 transform.Rotate(new Vector3(1,0,0), yDelta * dragStrength, Space.World);
-            //}
-            
-            
+            //}   
+        }
+        else
+        {
+            isMouseDown = false;
         }
         transform.Rotate(new Vector3(0,1,0), 0.1f, Space.Self);
         
@@ -42,6 +44,7 @@ public class EarthSpin : MonoBehaviour
     void FixedUpdate()
     {
         //rotational velocity decay
+        if (isMouseDown) return;
         if (rotationalVelocity.magnitude < 1) return;
 
         rotationalVelocity = Vector3.Lerp(rotationalVelocity, Vector3.zero, 0.1f);
