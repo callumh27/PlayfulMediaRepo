@@ -16,6 +16,6 @@ public class EarthEditor : MonoBehaviour
     void Update()
     {
         earthMaterial.SetTexture("_TectonicTexture", currentTimelineToEdit.tectonicMap);
-        earthMaterial.SetTexture("_LandmassTexture", currentTimelineToEdit.landmassMap;)
+        earthMaterial.SetTexture("_LandmassTexture", currentTimelineToEdit.landmassMap);
     }
 }
