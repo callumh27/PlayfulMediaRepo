@@ -265,6 +265,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 399106773}
+  - component: {fileID: 399106774}
   - component: {fileID: 399106772}
   - component: {fileID: 399106771}
   m_Layer: 0
@@ -302,6 +303,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   earthMaterial: {fileID: 2100000, guid: b0db3d3dcd0d42742b5557dc60e3f9eb, type: 2}
+  plateColourLookup: {fileID: 0}
 --- !u!114 &399106772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -344,6 +346,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &399106774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399106770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a482823d7fced4c44ac9e51cbada58bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EarthEditor
+  currentMode: 0
+  currentTimelineToEdit: {fileID: 0}
+  earthMaterial: {fileID: 0}
+  radius: 5
+  strength: 1
+  falloff: 0.4
 --- !u!1 &466931660
 GameObject:
   m_ObjectHideFlags: 0
