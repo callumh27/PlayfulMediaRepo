@@ -359,11 +359,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EarthEditor
   currentMode: 0
-  currentTimelineToEdit: {fileID: 0}
-  earthMaterial: {fileID: 0}
   radius: 5
   strength: 1
   falloff: 0.4
+  currentTimelineToEdit: {fileID: 0}
+  mainCamera: {fileID: 0}
+  earthLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  earthMaterial: {fileID: 2100000, guid: b0db3d3dcd0d42742b5557dc60e3f9eb, type: 2}
+  renderTextureSize: 256
+  compute: {fileID: 0}
+  paintCompute: {fileID: 0}
 --- !u!1 &466931660
 GameObject:
   m_ObjectHideFlags: 0
