@@ -1,25 +1,39 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+
+[Serializable]
+public struct TectonicPlate
+{
+    public bool isOceanic;
+    public Color plateColour;
+    public string plateName;
+}
 
 public class TectonicData : ScriptableObject
 {
 
-    [HideInInspector] public Texture3D tectonicTexture;
-    [HideInInspector] public Texture2D plateColourLookup;
-    [HideInInspector] public Vector4[] tectonicPoints;
+    public Texture3D tectonicTexture;
+    public Texture2D plateColourLookup;
+    public Vector4[] tectonicPoints;
     public List<TectonicPlate> tectonicPlates = new List<TectonicPlate>();
 
     private int amountOfTectonicPoints = 256;
     private ComputeBuffer tectonicPointBuffer;
 
 
-    [HideInInspector] public RenderTexture editableTectonicTexture;
+    public RenderTexture editableTectonicTexture;
 
-    public TectonicData(RenderTexture blankSphereTexture)
+    public ComputeShader tectonicPainterCompute;
+
+    public void Initialise(RenderTexture blankSphereTexture)
     {
+
+        editableTectonicTexture = blankSphereTexture;
+
         plateColourLookup = new Texture2D(25, 1);
 
-        GenerateTectonicPoints();
+        tectonicPoints = GenerateTectonicPoints();
 
         tectonicPointBuffer = new ComputeBuffer(tectonicPoints.Length, sizeof(float) * 4);
         tectonicPointBuffer.SetData(tectonicPoints);
@@ -31,6 +45,11 @@ public class TectonicData : ScriptableObject
     {
         if (!tectonicPointBuffer.IsValid()) return;
 
+        if (plateColourLookup == null)
+        {
+            plateColourLookup = new Texture2D(25, 1);
+        }
+
         Vector4[] tectonicColours = new Vector4[tectonicPlates.Count];
         for (int i = 0; i < tectonicPlates.Count; i++)
         {
@@ -41,18 +60,19 @@ public class TectonicData : ScriptableObject
 
 
         tectonicPointBuffer.GetData(tectonicPoints);
+        ComputeShader tectonicCompute = ComputeShaderReferences.Instance.tectonicTextureGenerator;
         tectonicCompute.SetTexture(0, "TectonicLookupTexture", editableTectonicTexture);
         tectonicCompute.SetVectorArray("tectonicPoints", tectonicPoints);
         tectonicCompute.SetVectorArray("tectonicColours", tectonicColours);
         tectonicCompute.SetFloat("planetRadius", 40);
-        tectonicCompute.SetInt("textureSize", renderTextureSize);
+        tectonicCompute.SetInt("textureSize", 256);
         tectonicCompute.SetInt("amountOfPlates", tectonicPlates.Count);
 
 
         tectonicCompute.Dispatch(0, editableTectonicTexture.width / 8, editableTectonicTexture.height / 8, editableTectonicTexture.volumeDepth / 8);
         // possibly make this a parameter
         //earthMaterial.SetTexture("_TectonicTexture", editableTectonicTexture);
-        //earthMaterial.SetTexture("_PlateColourLookupTexture", plateColourLookup);
+        
     }
 
     // generate a certain amount of equally spaced points and randomly skew them
@@ -80,6 +100,14 @@ public class TectonicData : ScriptableObject
 
     public void Paint(float radius, int plateID, Vector3 position)
     {
+        if (!tectonicPointBuffer.IsValid())
+        {
+            tectonicPointBuffer = new ComputeBuffer(tectonicPoints.Length, sizeof(float) * 4);
+            tectonicPointBuffer.SetData(tectonicPoints);
+        }
+
+        ComputeShader tectonicPainterCompute = Resources.Load<ComputeShader>("ComputeShaders/CS_TectonicPainter");
+
         tectonicPainterCompute.SetFloat("currentBrushRadius", radius);
         tectonicPainterCompute.SetInt("currentPaintIndex", plateID);
 

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 301ec0e651cc0354dadf58e084446fc8, type: 3}
+  m_Name: ComputeShaderReferences
+  m_EditorClassIdentifier: Assembly-CSharp::ComputeShaderReferences
+  blankSphereGenerator: {fileID: 7200000, guid: c0c02f2baccb004418d0f2354c48253c, type: 3}
+  heightMapPainter: {fileID: 7200000, guid: e548d668a7d606241a7b55fa3860038d, type: 3}
+  tectonicTextureGenerator: {fileID: 7200000, guid: a29bf2a5089d23643afcbaaaf7f25745, type: 3}
+  tectonicPainterCompute: {fileID: 7200000, guid: a5e83c00df415984e8fb2e1a251aee65, type: 3}
+  tectonicBoundariesCompute: {fileID: 7200000, guid: b6840024747daef4ca63b738a89b9b99, type: 3}

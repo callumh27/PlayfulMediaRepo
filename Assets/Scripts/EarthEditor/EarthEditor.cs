@@ -1,9 +1,10 @@
+using System.IO;
 using Unity.Collections;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
-using UnityEngine.Rendering;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
 public enum EarthEditorState
@@ -50,11 +51,17 @@ public class EarthEditor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        earthMaterial.SetTexture("_TectonicTexture", currentTimelineToEdit.tectonicData.tectonicTexture);
-        earthMaterial.SetTexture("_LandmassTexture", currentTimelineToEdit.heightData.heightTexture);
+        if (currentTimelineToEdit != null)
+        {
+            earthMaterial.SetTexture("_TectonicTexture", currentTimelineToEdit.tectonicData.editableTectonicTexture);
+            earthMaterial.SetTexture("_LandmassTexture", currentTimelineToEdit.heightData.editableHeightTexture);
+            earthMaterial.SetTexture("_PlateColourLookupTexture", currentTimelineToEdit.tectonicData.plateColourLookup);
+        }
+        
         if (currentMode == EarthEditorState.Tectonics)
         {
             earthMaterial.SetInt("_ViewTectonics", 1);
+            
         }
         else
         {
@@ -88,11 +95,11 @@ public class EarthEditor : MonoBehaviour
                     paintCompute.SetFloat("brushStrength", strength);
                     paintCompute.SetFloat("falloff", falloff);
                     paintCompute.SetVector("currentBrushPosition", hit.point);
-                    paintCompute.SetTexture(0, "SphereTexture", currentTimelineToEdit.landmassMap);
+                    paintCompute.SetTexture(0, "SphereTexture", currentTimelineToEdit.heightData.heightTexture);
                     paintCompute.SetFloat("planetRadius", 20);
                     paintCompute.SetInt("textureSize", renderTextureSize);
                     paintCompute.SetInt("addOrSubtract", 1);
-                    paintCompute.Dispatch(0, currentTimelineToEdit.landmassMap.width / 8, currentTimelineToEdit.landmassMap.height / 8, currentTimelineToEdit.landmassMap.volumeDepth / 8);
+                    paintCompute.Dispatch(0, currentTimelineToEdit.heightData.heightTexture.width / 8, currentTimelineToEdit.heightData.heightTexture.height / 8, currentTimelineToEdit.heightData.heightTexture.depth / 8);
                 }
                 else if (currentMode == EarthEditorState.Tectonics)
                 {
@@ -112,11 +119,11 @@ public class EarthEditor : MonoBehaviour
                 paintCompute.SetFloat("brushStrength", strength);
                 paintCompute.SetFloat("falloff", falloff);
                 paintCompute.SetVector("currentBrushPosition", hit.point);
-                paintCompute.SetTexture(0, "SphereTexture", currentTimelineToEdit.landmassMap);
+                paintCompute.SetTexture(0, "SphereTexture", currentTimelineToEdit.heightData.heightTexture);
                 paintCompute.SetFloat("planetRadius", 20);
                 paintCompute.SetInt("textureSize", renderTextureSize);
                 paintCompute.SetInt("addOrSubtract", -1);
-                paintCompute.Dispatch(0, currentTimelineToEdit.landmassMap.width / 8, currentTimelineToEdit.landmassMap.height / 8, currentTimelineToEdit.landmassMap.volumeDepth / 8);
+                paintCompute.Dispatch(0, currentTimelineToEdit.heightData.heightTexture.width / 8, currentTimelineToEdit.heightData.heightTexture.height / 8, currentTimelineToEdit.heightData.heightTexture.depth / 8);
             }
 
 
@@ -126,7 +133,22 @@ public class EarthEditor : MonoBehaviour
 
     public void GenerateTimelinePoint()
     {
-        currentTimelineToEdit = new EarthTimelinePoint();
+        currentTimelineToEdit = ScriptableObject.CreateInstance<EarthTimelinePoint>();
+        int fileNumber = 0;
+        string fileName;
+        string fullPath;
+
+        do
+        {
+            fileName = $"NewTimeLinePoint_{fileNumber}.asset";
+            fullPath = "Assets/Pre-Compute/EarthTimelinePoints/" + fileName;
+            fileNumber++;
+        }
+        while (File.Exists(fullPath));
+        AssetDatabase.CreateAsset(currentTimelineToEdit, fullPath);
+        AssetDatabase.SaveAssets();
+
+        currentTimelineToEdit.Initialise();
     }
 
 
@@ -145,29 +167,7 @@ public class EarthEditor : MonoBehaviour
 
     }
 
-    // function needed because render textures are not serialisable
-    // found at https://discussions.unity.com/t/save-a-3d-render-texture-to-file/863563/4
-    void ConvertToAsset(RenderTexture renderTexture, int heightOrTectonic = 0)
-    {
-        int width = renderTexture.width;
-        int height = renderTexture.height;
-        int depth = renderTexture.volumeDepth;
-        var a = new NativeArray<byte>((width * height * depth) * 2, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-        AsyncGPUReadback.RequestIntoNativeArray(ref a, renderTexture, 0, (_) =>
-        {
-            Texture3D output = new Texture3D(width, height, depth, renderTexture.graphicsFormat, TextureCreationFlags.None);
-            output.SetPixelData(a, 0);
-            output.Apply(updateMipmaps: false, makeNoLongerReadable: true);
-            if (heightOrTectonic == 0)
-            {
-                AssetDatabase.CreateAsset(output, "Assets/Pre-Compute/HeightTextures/" + "EarthMap.asset");
-            }
-            
-            AssetDatabase.SaveAssetIfDirty(output);
-            a.Dispose();
-            //renderTexture.Release();
-        });
-    }
+    
 
     public void SaveTimelinePoint()
     {
@@ -183,8 +183,29 @@ public class EarthEditor : MonoBehaviour
 [CustomEditor(typeof(EarthEditor))]
 public class EarthEditorInspector : Editor
 {
+
+    enum displayFieldType { DisplayAsAutomaticFields, DisplayAsCustomizableGUIFields };
+    displayFieldType DisplayFieldType;
+
+    SerializedObject GetTarget;
+    SerializedProperty ThisList;
+    int ListSize;
+
+    private SerializedProperty currentTimelinePoint;
+
+    bool showHeightData = false;
+    bool showTectonicData = false;
+
+
+    void OnEnable()
+    {
+        currentTimelinePoint = serializedObject.FindProperty("currentTimelineToEdit");
+    }
+
     override public void OnInspectorGUI()
     {
+        serializedObject.Update();
+
         var earthEditor = target as EarthEditor;
         DrawDefaultInspector();
 
@@ -209,10 +230,72 @@ public class EarthEditorInspector : Editor
                     break;
                 case EarthEditorState.Tectonics:
                     earthEditor.radius = EditorGUILayout.Slider("Brush Radius: ", earthEditor.radius, 0, 20f);
-                    earthEditor.plateIDToPaint = EditorGUILayout.IntSlider("Plate To Paint:", earthEditor.plateIDToPaint, 0, earthEditor.currentTimelineToEdit.tectonicPlates.Count);
+                    earthEditor.plateIDToPaint = EditorGUILayout.IntSlider("Plate To Paint:", earthEditor.plateIDToPaint, 0, earthEditor.currentTimelineToEdit.tectonicData.tectonicPlates.Count - 1);
                     // TODO: need a fold out of the currently selected plate
                     break;
             }
+            showTectonicData = EditorGUILayout.Foldout(showTectonicData, "Tectonic Data");
+            if (showTectonicData)
+            {
+                if (currentTimelinePoint.objectReferenceValue != null)
+                {
+                    SerializedObject timelinePointObject = new SerializedObject(currentTimelinePoint.objectReferenceValue);
+                    timelinePointObject.Update();
+
+                    SerializedProperty tectonicData = timelinePointObject.FindProperty("tectonicData");
+                    SerializedObject tectonicDataObject = new SerializedObject(tectonicData.objectReferenceValue);
+                    tectonicDataObject.Update();
+
+                    SerializedProperty tectonicPlatesList = tectonicDataObject.FindProperty("tectonicPlates");
+
+                    if (tectonicPlatesList != null && tectonicPlatesList.isArray)
+                    {
+                        EditorGUILayout.LabelField("Tectonic Plates", EditorStyles.boldLabel);
+                        EditorGUI.indentLevel++;
+
+                        tectonicPlatesList.arraySize = EditorGUILayout.IntField("Plate Count", tectonicPlatesList.arraySize);
+                        EditorGUILayout.Space();
+
+                        for (int i = 0; i < tectonicPlatesList.arraySize; i++)
+                        {
+                            SerializedProperty tectonicPlateProperty = tectonicPlatesList.GetArrayElementAtIndex(i);
+
+                            EditorGUILayout.BeginVertical("helpbox");
+                            EditorGUILayout.LabelField($"Plate #{i}", EditorStyles.miniBoldLabel);
+
+                            SerializedProperty nameProperty = tectonicPlateProperty.FindPropertyRelative("plateName");
+                            SerializedProperty oceanicProperty = tectonicPlateProperty.FindPropertyRelative("isOceanic");
+                            SerializedProperty colourProperty = tectonicPlateProperty.FindPropertyRelative("plateColour");
+
+                            if (nameProperty != null) EditorGUILayout.PropertyField(nameProperty);
+                            if (oceanicProperty != null) EditorGUILayout.PropertyField(oceanicProperty);
+                            if (colourProperty != null) EditorGUILayout.PropertyField(colourProperty);
+
+                            EditorGUILayout.EndVertical();
+                            EditorGUILayout.Space(2);
+                        }
+
+                        EditorGUI.indentLevel--;
+
+                    }
+                    tectonicDataObject.ApplyModifiedProperties();
+
+
+
+
+                }
+                serializedObject.ApplyModifiedProperties();
+
+
+            }
+
+
+            if (GUILayout.Button("Save Timeline Point"))
+            {
+                earthEditor.currentTimelineToEdit.SaveToAsset();
+            }
+
+
         }
             
         

@@ -4,14 +4,7 @@ using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.InputSystem;
 
-[Serializable]
-public struct TectonicPlate
-{
-    public int plateID;
-    public Vector3 plateDirection;
-    public bool isOceanic;
-    public Color plateColour;
-}
+
 
 public class TectonicEditor : MonoBehaviour
 {

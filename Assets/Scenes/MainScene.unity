@@ -266,8 +266,6 @@ GameObject:
   m_Component:
   - component: {fileID: 399106773}
   - component: {fileID: 399106774}
-  - component: {fileID: 399106772}
-  - component: {fileID: 399106771}
   m_Layer: 0
   m_Name: EarthEditor
   m_TagString: Untagged
@@ -275,62 +273,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &399106771
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 399106770}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b214e92706671e9438f49e9b2d95482f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TectonicEditor
-  isEnabled: 0
-  position: {x: 0, y: 0, z: 0}
-  radius: 5
-  amountOfTectonicPoints: 256
-  tectonicPlates: []
-  mapYear: 
-  renderTexture: {fileID: 0}
-  currentTectonicIndex: 0
-  tectonicCompute: {fileID: 7200000, guid: a29bf2a5089d23643afcbaaaf7f25745, type: 3}
-  tectonicPainterCompute: {fileID: 7200000, guid: a5e83c00df415984e8fb2e1a251aee65, type: 3}
-  plateBoundariesCompute: {fileID: 7200000, guid: b6840024747daef4ca63b738a89b9b99, type: 3}
-  mainCamera: {fileID: 2057630585}
-  earthLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  earthMaterial: {fileID: 2100000, guid: b0db3d3dcd0d42742b5557dc60e3f9eb, type: 2}
-  plateColourLookup: {fileID: 0}
---- !u!114 &399106772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 399106770}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cf3e153ac2f7524899d81547650482b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EarthLandPainter
-  isEnabled: 0
-  radius: 5
-  strength: 1
-  falloff: 4
-  mainCamera: {fileID: 2057630585}
-  earthLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  renderTextureSize: 256
-  earthMaterial: {fileID: 2100000, guid: b0db3d3dcd0d42742b5557dc60e3f9eb, type: 2}
-  position: {x: 0, y: 0, z: 0}
-  renderTexture: {fileID: 0}
-  texture: {fileID: 0}
-  compute: {fileID: 7200000, guid: c0c02f2baccb004418d0f2354c48253c, type: 3}
-  paintCompute: {fileID: 7200000, guid: e548d668a7d606241a7b55fa3860038d, type: 3}
 --- !u!4 &399106773
 Transform:
   m_ObjectHideFlags: 0
@@ -362,11 +304,12 @@ MonoBehaviour:
   radius: 5
   strength: 1
   falloff: 0.4
+  plateIDToPaint: 0
   currentTimelineToEdit: {fileID: 0}
   mainCamera: {fileID: 0}
   earthLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   earthMaterial: {fileID: 2100000, guid: b0db3d3dcd0d42742b5557dc60e3f9eb, type: 2}
   renderTextureSize: 256
   compute: {fileID: 0}
