@@ -1,4 +1,5 @@
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ComputeShaderReferences", menuName = "Reference Objects/ComputeShaderReferences")]
@@ -30,20 +31,20 @@ public class ComputeShaderReferences : ScriptableObject
     }
 
     [Header("Compute Shaders")]
-    public ComputeShader blankSphereGenerator;
-    public ComputeShader heightMapPainter;
-    public ComputeShader tectonicTextureGenerator;
-    public ComputeShader tectonicPainterCompute;
-    public ComputeShader tectonicBoundariesCompute;
-    public ComputeShader tectonicLookupCompute;
+    [SerializeField] public ComputeShader blankSphereGenerator;
+    [SerializeField] public ComputeShader heightMapPainter;
+    [SerializeField] public ComputeShader tectonicTextureGenerator;
+    [SerializeField] public ComputeShader tectonicPainterCompute;
+    [SerializeField] public ComputeShader tectonicBoundariesCompute;
+    [SerializeField] public ComputeShader tectonicLookupCompute;
 
     void InitializeReferences()
     {
-        blankSphereGenerator = Resources.Load<ComputeShader>("Earth Generation/BlankSphereTexGenerator.compute");
-        heightMapPainter = Resources.Load<ComputeShader>("Earth Generation/CS_EarthPainter.compute");
-        tectonicTextureGenerator = Resources.Load<ComputeShader>("Earth Generation/CS_TectonicMapTextureGenerator.compute");
-        tectonicPainterCompute = Resources.Load<ComputeShader>("Earth Generation/CS_TectonicPainter.compute");
-        tectonicBoundariesCompute = Resources.Load<ComputeShader>("Earth Generation/CS_PlateBoundaryCompute.compute");
-        tectonicLookupCompute = Resources.Load<ComputeShader>("Earth Generation/CS_PlateColourLookupGenerator.compute");
+        blankSphereGenerator = AssetDatabase.LoadAssetAtPath<ComputeShader>("Assets/ComputeShaders/EarthGeneration/BlankSphereTexGenerator.compute");
+        heightMapPainter = AssetDatabase.LoadAssetAtPath<ComputeShader>("Assets/ComputeShaders/EarthGeneration/CS_EarthPainter.compute");
+        tectonicTextureGenerator = AssetDatabase.LoadAssetAtPath<ComputeShader>("Assets/ComputeShaders/TectonicPlates/CS_TectonicMapTextureGenerator.compute");
+        tectonicPainterCompute = AssetDatabase.LoadAssetAtPath<ComputeShader>("Assets/ComputeShaders/TectonicPlates/CS_TectonicPainter.compute");
+        tectonicBoundariesCompute = AssetDatabase.LoadAssetAtPath<ComputeShader>("Assets/ComputeShaders/TectonicPlates/CS_PlateBoundaryCompute.compute");
+        tectonicLookupCompute = AssetDatabase.LoadAssetAtPath<ComputeShader>("Assets/ComputeShaders/TectonicPlates/CS_PlateColourLookupGenerator.compute");
     }
 }

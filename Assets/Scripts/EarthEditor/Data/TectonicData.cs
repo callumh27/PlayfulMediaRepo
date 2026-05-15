@@ -10,7 +10,7 @@ public struct TectonicPlate
     public string plateName;
 }
 
-public class TectonicData : ScriptableObject
+public class TectonicData
 {
 
     public Texture3D tectonicTexture;

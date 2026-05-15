@@ -17,3 +17,4 @@ MonoBehaviour:
   tectonicTextureGenerator: {fileID: 7200000, guid: a29bf2a5089d23643afcbaaaf7f25745, type: 3}
   tectonicPainterCompute: {fileID: 7200000, guid: a5e83c00df415984e8fb2e1a251aee65, type: 3}
   tectonicBoundariesCompute: {fileID: 7200000, guid: b6840024747daef4ca63b738a89b9b99, type: 3}
+  tectonicLookupCompute: {fileID: 7200000, guid: d8a24f5b45a251349a2bcc1f0cf43e3c, type: 3}

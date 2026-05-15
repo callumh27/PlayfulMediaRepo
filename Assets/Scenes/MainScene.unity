@@ -306,14 +306,12 @@ MonoBehaviour:
   falloff: 0.4
   plateIDToPaint: 0
   currentTimelineToEdit: {fileID: 0}
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 2057630585}
   earthLayer:
     serializedVersion: 2
     m_Bits: 8
   earthMaterial: {fileID: 2100000, guid: b0db3d3dcd0d42742b5557dc60e3f9eb, type: 2}
   renderTextureSize: 256
-  compute: {fileID: 0}
-  paintCompute: {fileID: 0}
 --- !u!1 &466931660
 GameObject:
   m_ObjectHideFlags: 0
