@@ -8,6 +8,8 @@ using UnityEngine.Rendering;
 [System.Serializable]
 public class EditableTimelinePoint
 {
+    public string yearsAgo;
+
     public RenderTexture tectonicMap;
     public RenderTexture heightMap;
     public Texture2D plateColourLookup;
@@ -140,16 +142,6 @@ public class EditableTimelinePoint
 
 
 
-    public void Save()
-    {
-        // convert to EarthTimelinePoint
-
-        // should also check if the asset exists and if so just replace it/edit it
-        EarthTimelinePoint newTimelinePoint = ScriptableObject.CreateInstance<EarthTimelinePoint>();
-        AssetDatabase.CreateAsset(newTimelinePoint, CreateCorrectPathName("Assets/Pre-Compute/EarthTimelinePoints", "TimelinePoint"));
-        AssetDatabase.SaveAssets();
-
-    }
 
     string CreateCorrectPathName(string path, string assetName)
     {

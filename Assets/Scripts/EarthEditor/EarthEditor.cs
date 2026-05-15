@@ -150,31 +150,83 @@ public class EarthEditor : MonoBehaviour
 
     public void SaveTimelinePoint()
     {
-        currentTimelineToEdit = ScriptableObject.CreateInstance<EarthTimelinePoint>();
+        if (currentTimelineToEdit != null)
+        {
+            currentTimelineToEdit.yearsAgo = editableTimeLine.yearsAgo;
+            currentTimelineToEdit.tectonicMap = ConvertToAsset(editableTimeLine.tectonicMap, $"Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-{currentTimelineToEdit.yearsAgo}", 1);
+            currentTimelineToEdit.heightMap = ConvertToAsset(editableTimeLine.heightMap, $"Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-{currentTimelineToEdit.yearsAgo}", 0);
+        }
+        else
+        {
+            currentTimelineToEdit = ScriptableObject.CreateInstance<EarthTimelinePoint>();
+            currentTimelineToEdit.yearsAgo = editableTimeLine.yearsAgo;
 
-        //currentTimelineToEdit.heightMap = editableTimeLine.heightMap;
-        //currentTimelineToEdit.tectonicMap = editableTimeLine.tectonicMap;
 
+
+            string guid = AssetDatabase.CreateFolder("Assets/Pre-Compute/EarthTimelinePoints", "Timeline Point-"+editableTimeLine.yearsAgo);
+            AssetDatabase.SaveAssets();
+
+            currentTimelineToEdit.tectonicMap = ConvertToAsset(editableTimeLine.tectonicMap, $"Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-{editableTimeLine.yearsAgo}", 1);
+            currentTimelineToEdit.heightMap = ConvertToAsset(editableTimeLine.heightMap, $"Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-{editableTimeLine.yearsAgo}", 0);
+
+            AssetDatabase.CreateAsset(currentTimelineToEdit, CreateCorrectPathName(AssetDatabase.GUIDToAssetPath(guid), "TimeLinePoint"));
+            
+
+            
+        }
+        AssetDatabase.SaveAssets();
+        editableTimeLine = null;
+
+    }
+
+    string CreateCorrectPathName(string path, string assetName)
+    {
         int fileNumber = 0;
         string fileName;
         string fullPath;
 
         do
         {
-            fileName = $"NewTimeLinePoint_{fileNumber}.asset";
-            fullPath = "Assets/Pre-Compute/EarthTimelinePoints/" + fileName;
+            fileName = $"{assetName}_{fileNumber}.asset";
+            fullPath = path + "/" + fileName;
             fileNumber++;
         }
         while (File.Exists(fullPath));
-        AssetDatabase.CreateAsset(currentTimelineToEdit, fullPath);
-        AssetDatabase.SaveAssets();
 
-        editableTimeLine = null;
+        return fullPath;
     }
 
-    
+    // function needed because render textures are not serialisable
+    // found at https://discussions.unity.com/t/save-a-3d-render-texture-to-file/863563/4
+    Texture3D ConvertToAsset(RenderTexture renderTexture, string folderDirectory, int heightOrTectonic = 0)
+    {
+        int width = renderTexture.width;
+        int height = renderTexture.height;
+        int depth = renderTexture.volumeDepth;
+        var a = new NativeArray<byte>((width * height * depth) * 8, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+        Texture3D output = new Texture3D(width, height, depth, renderTexture.graphicsFormat, TextureCreationFlags.None);
+        AsyncGPUReadback.RequestIntoNativeArray(ref a, renderTexture, 0, (_) =>
+        {
+            output.SetPixelData(a, 0);
+            output.Apply(updateMipmaps: false, makeNoLongerReadable: true);
+            if (heightOrTectonic == 0)
+            {
+                AssetDatabase.CreateAsset(output, CreateCorrectPathName(folderDirectory, "HeightMap"));
+            }
+            else
+            {
+                AssetDatabase.CreateAsset(output, CreateCorrectPathName(folderDirectory, "TectonicMap"));
+            }
 
-    
+            AssetDatabase.SaveAssetIfDirty(output);
+            a.Dispose();
+            //renderTexture.Release();
+
+        });
+        return output;
+    }
+
+
 
 }
 
@@ -241,7 +293,7 @@ public class EarthEditorInspector : Editor
 
             if (GUILayout.Button("Save Timeline Point"))
             {
-                //earthEditor.currentTimelineToEdit.SaveToAsset();
+                earthEditor.SaveTimelinePoint();
             }
             if (GUILayout.Button("Discard Timeline Point"))
             {
