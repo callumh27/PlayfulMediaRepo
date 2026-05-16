@@ -181,7 +181,7 @@ public class EditableTimelinePoint
         renderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8_SNorm;
         renderTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
         renderTexture.volumeDepth = renderTextureSize;
-        renderTexture.filterMode = FilterMode.Point;
+        renderTexture.filterMode = FilterMode.Trilinear;
         renderTexture.Create();
 
         return renderTexture;
