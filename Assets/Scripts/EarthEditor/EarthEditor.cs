@@ -48,6 +48,7 @@ public class EarthEditor : MonoBehaviour
             earthMaterial.SetTexture("_TectonicTexture", editableTimeLine.tectonicMap);
             earthMaterial.SetTexture("_HeightmapTexture", editableTimeLine.heightMap);
             earthMaterial.SetTexture("_PlateColourLookupTexture", editableTimeLine.plateColourLookup);
+            earthMaterial.SetFloat("_amountOfPlates", editableTimeLine.tectonicPlates.Count);
             if (currentMode == EarthEditorState.Tectonics)
             {
                 if (editableTimeLine.tectonicMap == null)
@@ -208,12 +209,11 @@ public class EarthEditor : MonoBehaviour
     {
         RenderTexture renderTexture = new RenderTexture(source.width, source.height, 0);
         renderTexture.enableRandomWrite = true;
-        renderTexture.graphicsFormat = source.graphicsFormat;
+        renderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8_SNorm;
         renderTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
         renderTexture.volumeDepth = source.depth;
         renderTexture.filterMode = FilterMode.Point;
         renderTexture.Create();
-
         AssetDatabase.CreateAsset(renderTexture, CreateCorrectPathName("Assets/Pre-Compute/Cache/", "BlankEarthRenderTexture"));
 
         Graphics.CopyTexture(source, renderTexture);
@@ -227,9 +227,8 @@ public class EarthEditor : MonoBehaviour
         int width = renderTexture.width;
         int height = renderTexture.height;
         int depth = renderTexture.volumeDepth;
-        int bytesPerPixel = heightOrTectonic == 0 ? 2 : 4;
-        var a = new NativeArray<byte>(width * height * depth * bytesPerPixel, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-        Texture3D output = new Texture3D(width, height, depth, renderTexture.graphicsFormat, TextureCreationFlags.None);
+        var a = new NativeArray<byte>(width * height * depth * 2, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+        Texture3D output = new Texture3D(width, height, depth, UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8_SNorm, TextureCreationFlags.None);
         AsyncGPUReadback.RequestIntoNativeArray(ref a, renderTexture, 0, (_) =>
         {
             output.SetPixelData(a, 0);

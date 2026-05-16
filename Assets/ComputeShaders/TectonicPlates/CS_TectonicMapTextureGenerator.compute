@@ -62,7 +62,7 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
 
 
         TectonicLookupTexture[id] = float2(
-            tectonicPoints[closestPointIndex].w,
+            (float)tectonicPoints[closestPointIndex].w / (float) amountOfPlates,
             TectonicLookupTexture[id].g);
         
     }
