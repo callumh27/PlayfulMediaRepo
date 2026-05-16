@@ -50,6 +50,7 @@ public class EarthEditor : MonoBehaviour
             earthMaterial.SetTexture("_HeightmapTexture", editableTimeLine.heightMap);
             earthMaterial.SetTexture("_PlateColourLookupTexture", editableTimeLine.plateColourLookup);
             earthMaterial.SetFloat("_amountOfPlates", editableTimeLine.tectonicPlates.Count);
+            earthMaterial.SetFloat("_Temperature", editableTimeLine.earthTemperature);
             if (currentMode == EarthEditorState.Tectonics)
             {
                 if (editableTimeLine.tectonicMap == null)
@@ -201,7 +202,7 @@ public class EarthEditor : MonoBehaviour
         renderTexture.graphicsFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8_SNorm;
         renderTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
         renderTexture.volumeDepth = source.depth;
-        renderTexture.filterMode = FilterMode.Point;
+        renderTexture.filterMode = FilterMode.Trilinear;
         renderTexture.Create();
         AssetDatabase.CreateAsset(renderTexture, CreateCorrectPathName("Assets/Pre-Compute/Cache/", "BlankEarthRenderTexture"));
 
@@ -218,6 +219,7 @@ public class EarthEditor : MonoBehaviour
         int depth = renderTexture.volumeDepth;
         var a = new NativeArray<byte>(width * height * depth * 2, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
         Texture3D output = new Texture3D(width, height, depth, UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8_SNorm, TextureCreationFlags.None);
+        output.filterMode = FilterMode.Trilinear;
         AsyncGPUReadback.RequestIntoNativeArray(ref a, renderTexture, 0, (_) =>
         {
             output.SetPixelData(a, 0);
