@@ -4,13 +4,6 @@ using UnityEngine;
 public class TimelineManager : MonoBehaviour
 {
 
-    [System.Serializable]
-    public struct TimelinePointData
-    {
-        [Range(0,1f)] public float normalizedTime;
-        public string yearsAgo;
-
-    }
 
     [Range(0,100f)]
     public float timelinePercentage = 0;
@@ -21,7 +14,7 @@ public class TimelineManager : MonoBehaviour
     [SerializeField] private RectTransform timelineBar;
 
     [Header("Data")]
-    [SerializeField] private List<TimelinePointData> timelinePoints;
+    [SerializeField] private List<EarthTimelinePoint> timelinePoints;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -40,7 +33,7 @@ public class TimelineManager : MonoBehaviour
 
         foreach (var point in timelinePoints)
         {
-            GameObject newPoint = Instantiate(timelinePointPrefab, timelineBar);
+            /*GameObject newPoint = Instantiate(timelinePointPrefab, timelineBar);
 
             RectTransform rt = newPoint.GetComponent<RectTransform>();
 
@@ -49,7 +42,7 @@ public class TimelineManager : MonoBehaviour
             rt.pivot = new Vector2(0.5f, 0.5f);
 
             float xPosition = point.normalizedTime * totalWidth;
-            rt.anchoredPosition = new Vector2(xPosition, 0);
+            rt.anchoredPosition = new Vector2(xPosition, 0);*/
 
         }
     }
