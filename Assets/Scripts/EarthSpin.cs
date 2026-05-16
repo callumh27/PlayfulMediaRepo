@@ -29,18 +29,18 @@ public class EarthSpin : MonoBehaviour
             return;
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(1))
         {
-            float xDelta = Input.mousePositionDelta.x;
-            float yDelta = Input.mousePositionDelta.y;
+            float xDelta = Input.mousePositionDelta.x * 0.5f;
+            float yDelta = Input.mousePositionDelta.y * 0.5f;
             //rotationalVelocity = new Vector3(yDelta,-xDelta);
             Debug.Log(rotationalVelocity);
         }
-        else if (Input.GetMouseButton(0))
+        else if (Input.GetMouseButton(1))
         {
             isMouseDown = true;
-            float xDelta = Input.mousePositionDelta.x;
-            float yDelta = Input.mousePositionDelta.y;
+            float xDelta = Input.mousePositionDelta.x * 0.5f;
+            float yDelta = Input.mousePositionDelta.y * 0.5f;
 
             rotationX += yDelta * dragStrength;
             rotationX = Mathf.Clamp(rotationX, -25f, 25f);
@@ -48,7 +48,7 @@ public class EarthSpin : MonoBehaviour
 
             Quaternion worldX = Quaternion.AngleAxis(rotationX, Vector3.right);
             Quaternion localY = Quaternion.AngleAxis(rotationY, Vector3.up);
-            transform.rotation = worldX * localY;
+            transform.rotation = Quaternion.Slerp(transform.rotation, worldX * localY, 0.2f);
             rotationalVelocity = new Vector3(yDelta,-xDelta) * dragStrength;
             //transform.Rotate(new Vector3(0,1,0), xDelta * -dragStrength, Space.Self);
             //if (transform.rotation.eulerAngles.x < 25 && transform.rotation.eulerAngles.x > -25)
@@ -72,9 +72,9 @@ public class EarthSpin : MonoBehaviour
     {
         //rotational velocity decay
         if (isMouseDown) return;
-        if (rotationalVelocity.magnitude < 1) return;
+        //if (rotationalVelocity.magnitude < 1) return;
 
-        rotationalVelocity = Vector3.Lerp(rotationalVelocity, Vector3.zero, 0.1f);
+        rotationalVelocity = Vector3.Lerp(rotationalVelocity, Vector3.zero, 0.05f);
         float xVelocity = rotationalVelocity.x;
         float yVelocity = rotationalVelocity.y;
 
