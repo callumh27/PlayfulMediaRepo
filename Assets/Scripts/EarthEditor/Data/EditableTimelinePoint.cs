@@ -15,15 +15,23 @@ public class EditableTimelinePoint
     public Texture2D plateColourLookup;
 
     public List<TectonicPlate> tectonicPlates = new List<TectonicPlate>();
-    private Vector4[] tectonicPoints;
+    [HideInInspector] public Vector4[] tectonicPoints;
 
     private int renderTextureSize = 256;
     private int amountOfTectonicPoints = 256;
     private ComputeBuffer tectonicPointBuffer;
 
-    public EditableTimelinePoint(Texture3D tectonicMapAsset, Texture3D heightMapAsset)
+    public EditableTimelinePoint(RenderTexture tectonicRt, RenderTexture heightRt, List<TectonicPlate> newPlateList, Vector4[] newTecPoints, string newYrsAgo)
     {
-        // convert the textures to RenderTextures
+        heightMap = heightRt;
+        tectonicMap = tectonicRt;
+        tectonicPlates.Clear();
+        tectonicPlates = newPlateList;
+        tectonicPoints = newTecPoints;
+        yearsAgo = newYrsAgo;
+        tectonicPointBuffer = new ComputeBuffer(tectonicPoints.Length, sizeof(float) * 4);
+        tectonicPointBuffer.SetData(tectonicPoints);
+        UpdateTectonicLookupTexture();
     }
 
     public EditableTimelinePoint()
@@ -41,6 +49,9 @@ public class EditableTimelinePoint
         GenerateSphereRenderTexture(ref rt);
         tectonicMap = rt;
         tectonicPoints = GenerateTectonicPoints();
+        plateColourLookup = new Texture2D(25, 1);
+        plateColourLookup.filterMode = FilterMode.Point;
+        plateColourLookup.anisoLevel = 0;
 
         tectonicPointBuffer = new ComputeBuffer(tectonicPoints.Length, sizeof(float) * 4);
         tectonicPointBuffer.SetData(tectonicPoints);
@@ -164,7 +175,7 @@ public class EditableTimelinePoint
     {
         RenderTexture renderTexture = new RenderTexture(renderTextureSize, renderTextureSize, 0);
         renderTexture.enableRandomWrite = true;
-        renderTexture.graphicsFormat = tec ? UnityEngine.Experimental.Rendering.GraphicsFormat.R16G16B16A16_SFloat : UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8_SNorm;
+        renderTexture.graphicsFormat = tec ? UnityEngine.Experimental.Rendering.GraphicsFormat.R16G16_SFloat : UnityEngine.Experimental.Rendering.GraphicsFormat.R8G8_SNorm;
         renderTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
         renderTexture.volumeDepth = renderTextureSize;
         renderTexture.filterMode = FilterMode.Point;

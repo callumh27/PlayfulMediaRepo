@@ -6,6 +6,7 @@ using UnityEngine.Experimental.Rendering;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
+using static Unity.VisualScripting.Member;
 
 public enum EarthEditorState
 {
@@ -139,7 +140,9 @@ public class EarthEditor : MonoBehaviour
     {
         if (currentTimelineToEdit != null)
         {
-            editableTimeLine = new EditableTimelinePoint(currentTimelineToEdit.tectonicMap, currentTimelineToEdit.heightMap);
+            RenderTexture tectonicRT = ConvertToRenderTexture(currentTimelineToEdit.tectonicMap);
+            RenderTexture heightRT = ConvertToRenderTexture(currentTimelineToEdit.heightMap);
+            editableTimeLine = new EditableTimelinePoint(tectonicRT, heightRT, currentTimelineToEdit.tectonicPlates, currentTimelineToEdit.tectonicPoints, currentTimelineToEdit.yearsAgo);
         }
     }
 
@@ -155,6 +158,9 @@ public class EarthEditor : MonoBehaviour
             currentTimelineToEdit.yearsAgo = editableTimeLine.yearsAgo;
             currentTimelineToEdit.tectonicMap = ConvertToAsset(editableTimeLine.tectonicMap, $"Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-{currentTimelineToEdit.yearsAgo}", 1);
             currentTimelineToEdit.heightMap = ConvertToAsset(editableTimeLine.heightMap, $"Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-{currentTimelineToEdit.yearsAgo}", 0);
+            currentTimelineToEdit.tectonicPlates = editableTimeLine.tectonicPlates;
+            currentTimelineToEdit.tectonicPoints = editableTimeLine.tectonicPoints;
+            currentTimelineToEdit.yearsAgo = editableTimeLine.yearsAgo;
         }
         else
         {
@@ -164,10 +170,12 @@ public class EarthEditor : MonoBehaviour
 
 
             string guid = AssetDatabase.CreateFolder("Assets/Pre-Compute/EarthTimelinePoints", "Timeline Point-"+editableTimeLine.yearsAgo);
-            AssetDatabase.SaveAssets();
 
             currentTimelineToEdit.tectonicMap = ConvertToAsset(editableTimeLine.tectonicMap, $"Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-{editableTimeLine.yearsAgo}", 1);
             currentTimelineToEdit.heightMap = ConvertToAsset(editableTimeLine.heightMap, $"Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-{editableTimeLine.yearsAgo}", 0);
+            currentTimelineToEdit.tectonicPlates = editableTimeLine.tectonicPlates;
+            currentTimelineToEdit.tectonicPoints = editableTimeLine.tectonicPoints;
+            currentTimelineToEdit.yearsAgo = editableTimeLine.yearsAgo;
 
             AssetDatabase.CreateAsset(currentTimelineToEdit, CreateCorrectPathName(AssetDatabase.GUIDToAssetPath(guid), "TimeLinePoint"));
             
@@ -196,6 +204,22 @@ public class EarthEditor : MonoBehaviour
         return fullPath;
     }
 
+    RenderTexture ConvertToRenderTexture(Texture3D source)
+    {
+        RenderTexture renderTexture = new RenderTexture(source.width, source.height, 0);
+        renderTexture.enableRandomWrite = true;
+        renderTexture.graphicsFormat = source.graphicsFormat;
+        renderTexture.dimension = UnityEngine.Rendering.TextureDimension.Tex3D;
+        renderTexture.volumeDepth = source.depth;
+        renderTexture.filterMode = FilterMode.Point;
+        renderTexture.Create();
+
+        AssetDatabase.CreateAsset(renderTexture, CreateCorrectPathName("Assets/Pre-Compute/Cache/", "BlankEarthRenderTexture"));
+
+        Graphics.CopyTexture(source, renderTexture);
+        return renderTexture;
+    }
+
     // function needed because render textures are not serialisable
     // found at https://discussions.unity.com/t/save-a-3d-render-texture-to-file/863563/4
     Texture3D ConvertToAsset(RenderTexture renderTexture, string folderDirectory, int heightOrTectonic = 0)
@@ -203,7 +227,8 @@ public class EarthEditor : MonoBehaviour
         int width = renderTexture.width;
         int height = renderTexture.height;
         int depth = renderTexture.volumeDepth;
-        var a = new NativeArray<byte>((width * height * depth) * 8, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+        int bytesPerPixel = heightOrTectonic == 0 ? 2 : 4;
+        var a = new NativeArray<byte>(width * height * depth * bytesPerPixel, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
         Texture3D output = new Texture3D(width, height, depth, renderTexture.graphicsFormat, TextureCreationFlags.None);
         AsyncGPUReadback.RequestIntoNativeArray(ref a, renderTexture, 0, (_) =>
         {

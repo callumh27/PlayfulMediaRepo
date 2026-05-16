@@ -3,11 +3,10 @@
 // creates a texture of plateID
 
 
-RWTexture3D<float4> TectonicLookupTexture;
+RWTexture3D<float2> TectonicLookupTexture;
 /*
 R = plateId
-G = oceanic
-B = plate boundaries
+G = plate boundaries
 */
 
 int amountOfPlates;
@@ -62,15 +61,13 @@ void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
 
 
 
-        TectonicLookupTexture[id] = float4(
+        TectonicLookupTexture[id] = float2(
             tectonicPoints[closestPointIndex].w,
-            0,
-            TectonicLookupTexture[id].b,
-            1);
+            TectonicLookupTexture[id].g);
         
     }
     else{
-        TectonicLookupTexture[id] = float4(0,0,0,0);
+        TectonicLookupTexture[id] = float2(0,0);
     }
         
         
