@@ -312,6 +312,7 @@ MonoBehaviour:
   earthLayer:
     serializedVersion: 2
     m_Bits: 8
+  earthTransform: {fileID: 2053769798}
   earthMaterial: {fileID: 2100000, guid: b0db3d3dcd0d42742b5557dc60e3f9eb, type: 2}
   renderTextureSize: 256
   references:
@@ -1164,6 +1165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EarthSpin
   dragStrength: 1
+  spin: 0
 --- !u!135 &2053769801
 SphereCollider:
   m_ObjectHideFlags: 0

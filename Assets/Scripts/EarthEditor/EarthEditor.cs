@@ -145,7 +145,7 @@ public class EarthEditor : MonoBehaviour
         {
             RenderTexture tectonicRT = ConvertToRenderTexture(currentTimelineToEdit.tectonicMap);
             RenderTexture heightRT = ConvertToRenderTexture(currentTimelineToEdit.heightMap);
-            editableTimeLine = new EditableTimelinePoint(tectonicRT, heightRT, currentTimelineToEdit.tectonicPlates, currentTimelineToEdit.tectonicPoints, currentTimelineToEdit.yearsAgo);
+            editableTimeLine = new EditableTimelinePoint(tectonicRT, heightRT, currentTimelineToEdit.tectonicPlates, currentTimelineToEdit.tectonicPoints, currentTimelineToEdit.yearsAgo, currentTimelineToEdit.earthTemperature);
         }
     }
 
@@ -156,35 +156,22 @@ public class EarthEditor : MonoBehaviour
 
     public void SaveTimelinePoint()
     {
-        if (currentTimelineToEdit != null)
-        {
-            currentTimelineToEdit.yearsAgo = editableTimeLine.yearsAgo;
-            currentTimelineToEdit.tectonicMap = ConvertToAsset(editableTimeLine.tectonicMap, $"Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-{currentTimelineToEdit.yearsAgo}", 1);
-            currentTimelineToEdit.heightMap = ConvertToAsset(editableTimeLine.heightMap, $"Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-{currentTimelineToEdit.yearsAgo}", 0);
-            currentTimelineToEdit.tectonicPlates = editableTimeLine.tectonicPlates;
-            currentTimelineToEdit.tectonicPoints = editableTimeLine.tectonicPoints;
-            currentTimelineToEdit.yearsAgo = editableTimeLine.yearsAgo;
-        }
-        else
+        if (currentTimelineToEdit == null)
         {
             currentTimelineToEdit = ScriptableObject.CreateInstance<EarthTimelinePoint>();
             currentTimelineToEdit.yearsAgo = editableTimeLine.yearsAgo;
-
-
-
-            string guid = AssetDatabase.CreateFolder("Assets/Pre-Compute/EarthTimelinePoints", "Timeline Point-"+editableTimeLine.yearsAgo);
-
-            currentTimelineToEdit.tectonicMap = ConvertToAsset(editableTimeLine.tectonicMap, $"Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-{editableTimeLine.yearsAgo}", 1);
-            currentTimelineToEdit.heightMap = ConvertToAsset(editableTimeLine.heightMap, $"Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-{editableTimeLine.yearsAgo}", 0);
-            currentTimelineToEdit.tectonicPlates = editableTimeLine.tectonicPlates;
-            currentTimelineToEdit.tectonicPoints = editableTimeLine.tectonicPoints;
-            currentTimelineToEdit.yearsAgo = editableTimeLine.yearsAgo;
-
+            string guid = AssetDatabase.CreateFolder("Assets/Pre-Compute/EarthTimelinePoints", "Timeline Point-" + editableTimeLine.yearsAgo);
             AssetDatabase.CreateAsset(currentTimelineToEdit, CreateCorrectPathName(AssetDatabase.GUIDToAssetPath(guid), "TimeLinePoint"));
-            
+        }
+
+        currentTimelineToEdit.tectonicMap = ConvertToAsset(editableTimeLine.tectonicMap, $"Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-{editableTimeLine.yearsAgo}", 1);
+        currentTimelineToEdit.heightMap = ConvertToAsset(editableTimeLine.heightMap, $"Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-{editableTimeLine.yearsAgo}", 0);
+        currentTimelineToEdit.tectonicPlates = editableTimeLine.tectonicPlates;
+        currentTimelineToEdit.tectonicPoints = editableTimeLine.tectonicPoints;
+        currentTimelineToEdit.yearsAgo = editableTimeLine.yearsAgo;
+        currentTimelineToEdit.earthTemperature = editableTimeLine.earthTemperature;
 
             
-        }
         AssetDatabase.SaveAssets();
         editableTimeLine = null;
 
@@ -259,14 +246,7 @@ public class EarthEditor : MonoBehaviour
 [CustomEditor(typeof(EarthEditor))]
 public class EarthEditorInspector : Editor
 {
-
-
     EarthEditor earthEditor;
-
-
-    bool showHeightData = false;
-    bool showTectonicData = false;
-
 
     override public void OnInspectorGUI()
     {

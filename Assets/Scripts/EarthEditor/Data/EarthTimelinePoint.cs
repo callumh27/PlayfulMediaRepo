@@ -22,6 +22,9 @@ public class EarthTimelinePoint: ScriptableObject
     public List<TectonicPlate> tectonicPlates = new List<TectonicPlate>();
     public Vector4[] tectonicPoints;
 
+    [Range(0f, 100f)]
+    public float earthTemperature = 30f;
+
     private int renderTextureSize = 256;
 
 
