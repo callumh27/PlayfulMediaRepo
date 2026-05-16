@@ -18,7 +18,7 @@ public class EditableTimelinePoint
     [HideInInspector] public Vector4[] tectonicPoints;
 
     private int renderTextureSize = 256;
-    private int amountOfTectonicPoints = 256;
+    private int amountOfTectonicPoints = 512;
     private ComputeBuffer tectonicPointBuffer;
 
     public EditableTimelinePoint(RenderTexture tectonicRt, RenderTexture heightRt, List<TectonicPlate> newPlateList, Vector4[] newTecPoints, string newYrsAgo)
