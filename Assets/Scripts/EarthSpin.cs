@@ -1,11 +1,20 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.LightTransport;
+using UnityEngine.SocialPlatforms;
 
 public class EarthSpin : MonoBehaviour
 {
 
     [SerializeField] float dragStrength = 1f;
+    public bool spin = false;
+
+    private float rotationX = 0f;
+    private float rotationY = 0f;
+
+    private bool isMouseOver = false;
 
 
     private Vector3 rotationalVelocity = Vector3.zero;
@@ -14,6 +23,12 @@ public class EarthSpin : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isMouseOver && GameObject.Find("EarthEditor").GetComponent<EarthEditor>().currentMode != EarthEditorState.None)
+        {
+            isMouseDown = false;
+            return;
+        }
+
         if (Input.GetMouseButtonUp(0))
         {
             float xDelta = Input.mousePositionDelta.x;
@@ -24,21 +39,32 @@ public class EarthSpin : MonoBehaviour
         else if (Input.GetMouseButton(0))
         {
             isMouseDown = true;
-            Debug.Log("Mose is down");
             float xDelta = Input.mousePositionDelta.x;
             float yDelta = Input.mousePositionDelta.y;
+
+            rotationX += yDelta * dragStrength;
+            rotationX = Mathf.Clamp(rotationX, -25f, 25f);
+            rotationY += xDelta * -dragStrength;
+
+            Quaternion worldX = Quaternion.AngleAxis(rotationX, Vector3.right);
+            Quaternion localY = Quaternion.AngleAxis(rotationY, Vector3.up);
+            transform.rotation = worldX * localY;
             rotationalVelocity = new Vector3(yDelta,-xDelta) * dragStrength;
-            transform.Rotate(new Vector3(0,1,0), xDelta * -dragStrength, Space.Self);
-            //if (transform.rotation.eulerAngles.x < 25 && transform.eulerAngles.x > -25)
+            //transform.Rotate(new Vector3(0,1,0), xDelta * -dragStrength, Space.Self);
+            //if (transform.rotation.eulerAngles.x < 25 && transform.rotation.eulerAngles.x > -25)
             //{
-                transform.Rotate(new Vector3(1,0,0), yDelta * dragStrength, Space.World);
-            //}   
+            //    transform.Rotate(new Vector3(1,0,0), yDelta * dragStrength, Space.World);
+            // }   
         }
         else
         {
             isMouseDown = false;
         }
-        transform.Rotate(new Vector3(0,1,0), 0.1f, Space.Self);
+        if (spin == true)
+        {
+            transform.Rotate(new Vector3(0, 1, 0), 0.1f, Space.Self);
+        }
+       
         
     }
 
@@ -51,8 +77,27 @@ public class EarthSpin : MonoBehaviour
         rotationalVelocity = Vector3.Lerp(rotationalVelocity, Vector3.zero, 0.1f);
         float xVelocity = rotationalVelocity.x;
         float yVelocity = rotationalVelocity.y;
-        transform.Rotate(new Vector3(xVelocity,0,0), Space.World);
-        transform.Rotate(new Vector3(0,yVelocity,0), Space.Self);
+
+        rotationX += xVelocity;
+        rotationX = Mathf.Clamp(rotationX, -25f, 25f);
+        rotationY += yVelocity;
+
+        Quaternion worldX = Quaternion.AngleAxis(rotationX, Vector3.right);
+        Quaternion localY = Quaternion.AngleAxis(rotationY, Vector3.up);
+
+        transform.rotation = worldX * localY;
+
+        //transform.Rotate(new Vector3(xVelocity,0,0), Space.World);
+        //transform.Rotate(new Vector3(0,yVelocity,0), Space.Self);
     }
 
+    private void OnMouseOver()
+    {
+        isMouseOver = true;
+    }
+
+    private void OnMouseExit()
+    {
+        isMouseOver = false;
+    }
 }
