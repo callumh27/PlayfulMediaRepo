@@ -34,7 +34,8 @@ public class EarthEditor : MonoBehaviour
     [Header("Properties")]
     [SerializeField] private Camera mainCamera;
     [SerializeField] private LayerMask earthLayer;
-    
+
+    public Transform earthTransform;
     public Material earthMaterial;
     public int renderTextureSize = 256;
 
@@ -79,6 +80,7 @@ public class EarthEditor : MonoBehaviour
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, earthLayer))
         {
             brushPosition = hit.point;
+            Vector3 localHitPosition = earthTransform.InverseTransformPoint(hit.point);
             if (Mouse.current.leftButton.IsPressed())
             {
                 //user is currently painting on the surface of the Earth,
@@ -92,12 +94,12 @@ public class EarthEditor : MonoBehaviour
 
                 if (currentMode == EarthEditorState.Landmass)
                 {
-                    editableTimeLine.LandPaint(radius, strength, falloff, hit.point, true);
+                    editableTimeLine.LandPaint(radius, strength, falloff, localHitPosition * 20f, true);
                     
                 }
                 else if (currentMode == EarthEditorState.Tectonics)
                 {
-                    editableTimeLine.TectonicPaint(radius, plateIDToPaint, hit.point);
+                    editableTimeLine.TectonicPaint(radius, plateIDToPaint, localHitPosition * 20f);
 
                 }
 
@@ -105,7 +107,7 @@ public class EarthEditor : MonoBehaviour
             else if (Mouse.current.rightButton.IsPressed())
             {
                 if (currentMode == EarthEditorState.Tectonics) return;
-                editableTimeLine.LandPaint(radius, strength, falloff, hit.point, false);
+                editableTimeLine.LandPaint(radius, strength, falloff, localHitPosition * 20f, false);
             }
 
 
