@@ -306,12 +306,19 @@ MonoBehaviour:
   falloff: 0.4
   plateIDToPaint: 0
   currentTimelineToEdit: {fileID: 0}
+  editableTimeLine:
+    rid: -2
   mainCamera: {fileID: 2057630585}
   earthLayer:
     serializedVersion: 2
     m_Bits: 8
   earthMaterial: {fileID: 2100000, guid: b0db3d3dcd0d42742b5557dc60e3f9eb, type: 2}
   renderTextureSize: 256
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &466931660
 GameObject:
   m_ObjectHideFlags: 0
@@ -1151,11 +1158,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2053769797}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5059a9dc74a51714e8b98f9007f756e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EarthSpin
+  dragStrength: 1
 --- !u!135 &2053769801
 SphereCollider:
   m_ObjectHideFlags: 0

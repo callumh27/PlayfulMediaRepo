@@ -24,6 +24,7 @@ public class EarthSpin : MonoBehaviour
         else if (Input.GetMouseButton(0))
         {
             isMouseDown = true;
+            Debug.Log("Mose is down");
             float xDelta = Input.mousePositionDelta.x;
             float yDelta = Input.mousePositionDelta.y;
             rotationalVelocity = new Vector3(yDelta,-xDelta) * dragStrength;
