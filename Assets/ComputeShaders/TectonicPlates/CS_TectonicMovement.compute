@@ -3,16 +3,15 @@
 
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
-Texture3D<float2> srcTectonicTexture;
-Texture3D<float2> srcHeightTexture;
-Texture3D<float2> destHeightTexture;
+RWTexture3D<float2> srcTectonicTexture;
+RWTexture3D<float2> srcHeightTexture;
+RWTexture3D<float2> destHeightTexture;
 RWTexture3D<float2> outputHeightTexture;
 RWTexture3D<float2> outputTectonicTexture;
 
 SamplerState linearClampSampler;
 
 float4 plateRotations[25];
-int amountOfPlates;
 
 float4 tectonicPoints[1024];
 
@@ -52,12 +51,12 @@ void CSMain (uint3 id : SV_DispatchThreadID)
     
     float pixelValue = length(worldPos) / (maxD + 1) - 0.5f;
     
-    if (pixelValue > -0.01f && pixelValue < 0.01f)
+    if (pixelValue > -0.1f && pixelValue < 0.01f)
     {
         int closestPlateIndex = -1;
         float closestDistance = 1000000;
         // TODO: refactor this so that it is spread across threads for faster execution
-        for (int i = 0; i < tectonicPoints.Length; i++)
+        for (int i = 0; i < 1024; i++)
         {
             if (distance(worldPos, tectonicPoints[i].xyz) < closestDistance)
             {
@@ -67,23 +66,21 @@ void CSMain (uint3 id : SV_DispatchThreadID)
             }
         }
         
-        float4 rotation = plateRotations[closestPlateIndex];
-        float4 invRotation = QuatInverse(rotation);
-        
-        float3 srcDirection = normalize(QuatRotate(invRotation, worldPos));
-        
-        float3 scrDirAsUVW = srcDirection * 0.5 + 0.5;
-        
-        float2 srcPlate = srcTectonicTexture.SampleLevel(linearClampSampler, scrDirAsUVW, 0);
-        float2 srcHeight = srcHeightTexture.SampleLevel(linearClampSampler, scrDirAsUVW, 0);
-        
-        float3 destUVW = worldPos * 0.5 + 0.5;
-        float2 destHeight = destHeightTexture.SampleLevel(linearClampSampler, destUVW, 0);
-        
-        outputTectonicTexture[id] = srcPlate;
-        
-        outputHeightTexture[id] = lerp(srcHeight, destHeight, t);
+        float3 outDir = normalize(worldPos);
+        float4 invRotation = QuatInverse(plateRotations[closestPlateIndex]);
+        float3 srcDir = QuatRotate(invRotation, outDir);
+        float3 srcWorldPos = srcDir * length(worldPos);
+        uint3 srcIndex = uint3((srcWorldPos / planetRadius + 0.5) * (textureSize - 1));
+        outputTectonicTexture[id] = srcTectonicTexture[srcIndex];
+        uint3 destIndex = uint3((worldPos / planetRadius + 0.5) * (textureSize - 1));
+
+        outputHeightTexture[id] = srcHeightTexture[id];
         
     }
+    //float3 outDir = normalize(worldPos);
+    //float3 uvw = outDir * 0.5 + 0.5;
+    //uint3 srcIndex = uint3(uvw * (textureSize - 1));
+    //float2 srcPlate = srcTectonicTexture[srcIndex];
+    //outputTectonicTexture[id] = srcTectonicTexture[id];
 
 }

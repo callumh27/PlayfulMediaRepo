@@ -14,7 +14,8 @@ public class EarthTimelinePoint: ScriptableObject
 
     //public HeightData heightData;
     //public TectonicData tectonicData;
-    public string yearsAgo;
+    [Range(0,4540)]
+    public int millionYearsAgo;
 
     public Texture3D heightMap;
     public Texture3D tectonicMap;

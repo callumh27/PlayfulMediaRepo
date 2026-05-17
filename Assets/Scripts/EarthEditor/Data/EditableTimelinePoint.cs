@@ -8,7 +8,8 @@ using UnityEngine.Rendering;
 [System.Serializable]
 public class EditableTimelinePoint
 {
-    public string yearsAgo;
+    [Range(0,4540)]
+    public int millionYearsAgo;
 
     public RenderTexture tectonicMap;
     public RenderTexture heightMap;
@@ -24,14 +25,14 @@ public class EditableTimelinePoint
     private int amountOfTectonicPoints = 512;
     private ComputeBuffer tectonicPointBuffer;
 
-    public EditableTimelinePoint(RenderTexture tectonicRt, RenderTexture heightRt, List<TectonicPlate> newPlateList, Vector4[] newTecPoints, string newYrsAgo, float temp)
+    public EditableTimelinePoint(RenderTexture tectonicRt, RenderTexture heightRt, List<TectonicPlate> newPlateList, Vector4[] newTecPoints, int newYrsAgo, float temp)
     {
         heightMap = heightRt;
         tectonicMap = tectonicRt;
         tectonicPlates.Clear();
         tectonicPlates = newPlateList;
         tectonicPoints = newTecPoints;
-        yearsAgo = newYrsAgo;
+        millionYearsAgo = newYrsAgo;
         earthTemperature = temp;
         tectonicPointBuffer = new ComputeBuffer(tectonicPoints.Length, sizeof(float) * 4);
         tectonicPointBuffer.SetData(tectonicPoints);
@@ -128,9 +129,7 @@ public class EditableTimelinePoint
 
 
         tectonicCompute.Dispatch(0, tectonicMap.width / 8, tectonicMap.height / 8, tectonicMap.volumeDepth / 8);
-        // possibly make this a parameter
-        //earthMaterial.SetTexture("_TectonicTexture", editableTectonicTexture);
-        Debug.Log("oainbted");
+
     }
 
     // generate a certain amount of equally spaced points and randomly skew them
