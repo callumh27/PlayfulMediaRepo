@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-4154/TectonicMap_0.asset.meta
 guid: f3fb61d4ccb30d245820f9b0b48ba448
+========
+guid: 30a03772251905c45a89445af691f7e6
+>>>>>>>> aed37ca224ffcb014f0b8cb06bf43d75a9091b2c:Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-4540/TectonicMap_1.asset.meta
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 11700000
