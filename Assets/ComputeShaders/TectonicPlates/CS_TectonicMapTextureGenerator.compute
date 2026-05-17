@@ -12,7 +12,6 @@ G = plate boundaries
 int amountOfPlates;
 
 float4 tectonicPoints[1024];
-float4 tectonicColours[25];
 
 int textureSize;
 float planetRadius;

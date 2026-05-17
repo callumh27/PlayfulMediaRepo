@@ -4,22 +4,43 @@ using UnityEngine;
 public class TimelineManager : MonoBehaviour
 {
 
-
+    [Header("Data")]
+    [SerializeField] private List<EarthTimelinePoint> timelinePoints;
     [Range(0,100f)]
-    public float timelinePercentage = 0;
+    public float currentTime = 0;
+
+    public ComputeShader plateMovementCompute;
+    private int textureResolution = 256;
 
 
     [Header("UI References")]
     [SerializeField] private GameObject timelinePointPrefab;
     [SerializeField] private RectTransform timelineBar;
 
-    [Header("Data")]
-    [SerializeField] private List<EarthTimelinePoint> timelinePoints;
+
+    [Header("Output")]
+    public RenderTexture outputTectonicTexture;
+    public RenderTexture outputHeightTexture;
+
+    private ComputeBuffer rotationBuffer;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        GenerateTimelinePoints();
+        //GenerateTimelinePoints();
+
+    }
+
+    private void OnDestroy()
+    {
+        rotationBuffer.Release();
+    }
+
+    public void SetTime(float time)
+    {
+        currentTime = time;
+        UpdateMovementCompute();
     }
 
     public void GenerateTimelinePoints()
@@ -46,4 +67,11 @@ public class TimelineManager : MonoBehaviour
 
         }
     }
+
+    void BakeMovements()
+    {
+
+    }
+
+
 }

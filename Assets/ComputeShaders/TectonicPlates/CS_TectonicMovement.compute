@@ -1,0 +1,89 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+Texture3D<float2> srcTectonicTexture;
+Texture3D<float2> srcHeightTexture;
+Texture3D<float2> destHeightTexture;
+RWTexture3D<float2> outputHeightTexture;
+RWTexture3D<float2> outputTectonicTexture;
+
+SamplerState linearClampSampler;
+
+float4 plateRotations[25];
+int amountOfPlates;
+
+float4 tectonicPoints[1024];
+
+int textureSize;
+float planetRadius;
+
+float t;
+
+float4 QuatInverse(float4 q)
+{
+    return float4(-q.x,-q.y, -q.z, q.w);
+}
+
+// FOUND AT 
+float4 QuatMul(float4 q1, float4 q2)
+{
+    return float4(
+        q2.xyz * q1.w + q1.xyz * q2.w + cross(q1.xyz, q2.xyz),
+        q1.w * q2.w - dot(q1.xyz, q2.xyz)
+    );
+}
+
+float3 QuatRotate(float4 q, float3 v)
+{
+    float4 q_c = q * float4(-1, -1, -1, 1);
+    return QuatMul(q, QuatMul(float4(v, 0), q_c)).xyz;
+}
+
+
+[numthreads(8,8,8)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    float3 worldPos = (id / float(textureSize - 1.0) - 0.5f) * planetRadius;
+    
+    float halfRadius = planetRadius / 2;
+    float maxD = length(float3(halfRadius, halfRadius, halfRadius));
+    
+    float pixelValue = length(worldPos) / (maxD + 1) - 0.5f;
+    
+    if (pixelValue > -0.01f && pixelValue < 0.01f)
+    {
+        int closestPlateIndex = -1;
+        float closestDistance = 1000000;
+        // TODO: refactor this so that it is spread across threads for faster execution
+        for (int i = 0; i < tectonicPoints.Length; i++)
+        {
+            if (distance(worldPos, tectonicPoints[i].xyz) < closestDistance)
+            {
+                closestPlateIndex = tectonicPoints[i].w;
+                closestDistance = distance(worldPos, tectonicPoints[i].xyz);
+
+            }
+        }
+        
+        float4 rotation = plateRotations[closestPlateIndex];
+        float4 invRotation = QuatInverse(rotation);
+        
+        float3 srcDirection = normalize(QuatRotate(invRotation, worldPos));
+        
+        float3 scrDirAsUVW = srcDirection * 0.5 + 0.5;
+        
+        float2 srcPlate = srcTectonicTexture.SampleLevel(linearClampSampler, scrDirAsUVW, 0);
+        float2 srcHeight = srcHeightTexture.SampleLevel(linearClampSampler, scrDirAsUVW, 0);
+        
+        float3 destUVW = worldPos * 0.5 + 0.5;
+        float2 destHeight = destHeightTexture.SampleLevel(linearClampSampler, destUVW, 0);
+        
+        outputTectonicTexture[id] = srcPlate;
+        
+        outputHeightTexture[id] = lerp(srcHeight, destHeight, t);
+        
+    }
+
+}
