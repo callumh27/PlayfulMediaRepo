@@ -53,7 +53,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HeightmapTexture:
-        m_Texture: {fileID: 8400000, guid: 49137c4a603ac6e42b7f95512c890a22, type: 2}
+        m_Texture: {fileID: 8400000, guid: c6da2051a2647c7438a77e40181e1d6c, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _LandmassTexture:
@@ -85,7 +85,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TectonicTexture:
-        m_Texture: {fileID: 8400000, guid: 0dc832028b05f4e4e83e473307451e29, type: 2}
+        m_Texture: {fileID: 8400000, guid: 8f54f2080c483774995c864c668b6d8d, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:

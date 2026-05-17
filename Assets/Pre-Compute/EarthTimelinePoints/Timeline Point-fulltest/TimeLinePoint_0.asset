@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: TimeLinePoint_0
   m_EditorClassIdentifier: Assembly-CSharp::EarthTimelinePoint
   yearsAgo: fulltest
-  heightMap: {fileID: 0}
-  tectonicMap: {fileID: 0}
+  heightMap: {fileID: 11700000, guid: 20d59348deb6bea40b67b54e9a37c666, type: 2}
+  tectonicMap: {fileID: 11700000, guid: 30a03772251905c45a89445af691f7e6, type: 2}
   tectonicPlates:
   - isOceanic: 0
     plateColour: {r: 1, g: 0, b: 0, a: 0}
