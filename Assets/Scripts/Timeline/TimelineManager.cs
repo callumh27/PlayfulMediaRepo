@@ -172,64 +172,64 @@ public class TimelineManager : MonoBehaviour
     void UpdateTimePeriod(float time)
     {
         string timePeriod = "Holocene";
-        int mya = (int)((1 - time) * 4540);
-        if (mya <= 4540)
+        int mya = (int)((time) * 4540);
+        if (mya >= 4540)
         {
             timePeriod = "Hadean";
         }
-        else if (mya <= 4000)
+        else if (mya >= 4000)
         {
             timePeriod = "Archean";
         }
-        else if (mya <= 2500)
+        else if (mya >= 2500)
         {
             timePeriod = "Proterozoic";
         }
-        else if (mya <= 540)
+        else if (mya >= 540)
         {
             timePeriod = "Cambrian";
         }
-        else if (mya <= 490)
+        else if (mya >= 490)
         {
             timePeriod = "Ordovician";
         }
-        else if (mya <= 445)
+        else if (mya >= 445)
         {
             timePeriod = "Silurian";
         }
-        else if (mya <= 415)
+        else if (mya >= 415)
         {
             timePeriod = "Devonian";
         }
-        else if (mya <= 360)
+        else if (mya >= 360)
         {
             timePeriod = "Carboniferous";
         }
-        else if (mya <= 300)
+        else if (mya >= 300)
         {
             timePeriod = "Permian";
         }
-        else if (mya <= 250)
+        else if (mya >= 250)
         {
             timePeriod = "Triassic";
         }
-        else if (mya <= 250)
+        else if (mya >= 250)
         {
             timePeriod = "Triassic";
         }
-        else if (mya <= 200)
+        else if (mya >= 200)
         {
             timePeriod = "Jurassic";
         }
-        else if (mya <= 150)
+        else if (mya >= 150)
         {
             timePeriod = "Cretaceous";
         }
-        else if (mya <= 65)
+        else if (mya >= 65)
         {
             timePeriod = "Paleogene";
         }
-        else if (mya <= 20)
+        else if (mya >= 20)
         {
             timePeriod = "Quaternary";
         }

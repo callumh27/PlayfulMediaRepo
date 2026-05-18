@@ -1,16 +1,10 @@
 using UnityEngine;
 
-public class TimelineEvent : MonoBehaviour
+public class TimelineEvent : ScriptableObject
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public int eventTimeMYA = 0;
+    public string eventName;
+    public string eventText;
+    public Sprite eventIcon;
 }

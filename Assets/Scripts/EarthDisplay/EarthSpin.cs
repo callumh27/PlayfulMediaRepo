@@ -74,7 +74,7 @@ public class EarthSpin : MonoBehaviour
         if (isMouseDown) return;
         //if (rotationalVelocity.magnitude < 1) return;
 
-        rotationalVelocity = Vector3.Lerp(rotationalVelocity, new Vector3(0,1,0), 0.05f);
+        rotationalVelocity = Vector3.Lerp(rotationalVelocity, new Vector3(0,-0.5f,0), 0.05f);
         float xVelocity = rotationalVelocity.x;
         float yVelocity = rotationalVelocity.y;
 
