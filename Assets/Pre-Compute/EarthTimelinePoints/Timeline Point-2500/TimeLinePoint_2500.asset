@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46f166db3c3559c40bd923a30fb2bb8e, type: 3}
+  m_Name: TimeLinePoint_2500
+  m_EditorClassIdentifier: Assembly-CSharp::EarthTimelinePoint
+  millionYearsAgo: 2500
+  heightMap: {fileID: 11700000, guid: 93dcb0fb6e4d0a74d8a23e574357a325, type: 2}
+  tectonicMap: {fileID: 11700000, guid: eeb9d763acb8b084693b14055874fc20, type: 2}
+  tectonicPlates: []
+  tectonicPoints: []
+  earthTemperature: 0
+  seaLevel: 0
