@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-4540/HeightMap_0.asset.meta
-guid: 03058b81cc96cd640852a63a49c744e2
-========
-guid: 20d59348deb6bea40b67b54e9a37c666
->>>>>>>> 870352b (implemented temperature/biomes):Assets/Pre-Compute/EarthTimelinePoints/Timeline Point-4540/HeightMap_1.asset.meta
+guid: 2b0c5468db54e4b4d85596de5c49f1fb
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 11700000
