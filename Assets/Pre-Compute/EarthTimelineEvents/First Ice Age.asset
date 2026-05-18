@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 932f8d6889f79ab4d89ab019050a57ba, type: 3}
   m_Name: First Ice Age
   m_EditorClassIdentifier: Assembly-CSharp::TimelineEvent
-  eventTimeMYA: 700
+  eventTimeMYA: 2600
   eventName: First Ice Age
   eventText: 
   eventIcon: {fileID: 0}

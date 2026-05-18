@@ -66,13 +66,16 @@ public class TimelineManager : MonoBehaviour
         //earthMaterial.SetTexture("_PlateColourLookupTexture", editableTimeLine.plateColourLookup);
         seaLevelSlider.GetComponent<Slider>().onValueChanged.AddListener((value) => UpdateOutputTextures());
         temperatureSlider.GetComponent<Slider>().onValueChanged.AddListener((value) => UpdateOutputTextures());
+        UpdateOutputTextures();
     }
 
     private void Update()
     {
         //UpdateOutputTextures(currentTime/100f);
+        int mya = (int)((1 - currentTime/100f) * 4540);
         earthMaterial.SetFloat("_Temperature", currentTemperature);
         earthMaterial.SetFloat("_SeaLevel", currentSeaLevel);
+        earthMaterial.SetFloat("_CurrentYear", mya);
 
         if (showingCurrentEventUI == true)
         {
@@ -125,6 +128,8 @@ public class TimelineManager : MonoBehaviour
             float xPosition = (1f - (timelineEvent.eventTimeMYA / 4540f) * totalWidth) + totalWidth;
             rt.anchoredPosition = new Vector2(xPosition, 0.5f);
 
+            //Instantiate(timelineEvent.eventIcon)
+
         }
     }
 
@@ -153,7 +158,6 @@ public class TimelineManager : MonoBehaviour
     {
         float time = currentTime / 100f;
         int mya = (int)((1 - time) * 4540);
-        Debug.Log(mya);
         for (int i = 0; i < timelineEvents.Count - 1; i++)
         {
             
