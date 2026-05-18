@@ -530,3 +530,5 @@ MonoBehaviour:
   - {x: 4.8120337, y: -13.438168, z: -14.009281, w: 0}
   - {x: 7.6357894, y: -5.8509254, z: 17.534576, w: 0}
   earthTemperature: 54
+  currentPeriod: Cretaceous
+  seaLevel: 0.3

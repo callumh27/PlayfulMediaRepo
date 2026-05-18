@@ -4,6 +4,8 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 
+
+
 /* 
 
 to get rotated plate at current time, check the two closest timeline points,
@@ -27,6 +29,7 @@ public class TimelineManager : MonoBehaviour
     [SerializeField] private GameObject timelinePointPrefab;
     [SerializeField] private RectTransform timelineBar;
     [SerializeField] private TMP_Text timeText;
+    [SerializeField] private TMP_Text periodText;
 
     public Material earthMaterial;
 
@@ -73,6 +76,7 @@ public class TimelineManager : MonoBehaviour
         currentTime = time;
         UpdateOutputTextures(currentTime/100f);
         timeText.text = FormatGeologicalTime();
+        
     }
 
     public void SliderChanged(float newValue)
@@ -109,7 +113,6 @@ public class TimelineManager : MonoBehaviour
     {
         if (timelinePoints == null || timelinePoints.Count < 2) return;
         transitions = new TimelineTransition[timelinePoints.Count - 1];
-        Debug.Log("HELLO");
         for (int i = 0; i < timelinePoints.Count - 1; i++)
         {
             transitions[i] = new TimelineTransition
@@ -129,16 +132,20 @@ public class TimelineManager : MonoBehaviour
 
     void UpdateOutputTextures(float time)
     {
+
         for (int i = 0; i < transitions.Length; i++)
         {
             float point1Time = 1 - (timelinePoints[i].millionYearsAgo / 4540f);
             float point2Time = 1 - (timelinePoints[i + 1].millionYearsAgo / 4540f);
 
+            UpdateTimePeriod(time);
 
             if (time < point1Time || time > point2Time)
             {
                 continue;
             }
+
+            
 
             float t = Mathf.InverseLerp(point1Time, point2Time, time);
 
@@ -162,6 +169,72 @@ public class TimelineManager : MonoBehaviour
         }
     }
 
+    void UpdateTimePeriod(float time)
+    {
+        string timePeriod = "Holocene";
+        int mya = (int)((1 - time) * 4540);
+        if (mya <= 4540)
+        {
+            timePeriod = "Hadean";
+        }
+        else if (mya <= 4000)
+        {
+            timePeriod = "Archean";
+        }
+        else if (mya <= 2500)
+        {
+            timePeriod = "Proterozoic";
+        }
+        else if (mya <= 540)
+        {
+            timePeriod = "Cambrian";
+        }
+        else if (mya <= 490)
+        {
+            timePeriod = "Ordovician";
+        }
+        else if (mya <= 445)
+        {
+            timePeriod = "Silurian";
+        }
+        else if (mya <= 415)
+        {
+            timePeriod = "Devonian";
+        }
+        else if (mya <= 360)
+        {
+            timePeriod = "Carboniferous";
+        }
+        else if (mya <= 300)
+        {
+            timePeriod = "Permian";
+        }
+        else if (mya <= 250)
+        {
+            timePeriod = "Triassic";
+        }
+        else if (mya <= 250)
+        {
+            timePeriod = "Triassic";
+        }
+        else if (mya <= 200)
+        {
+            timePeriod = "Jurassic";
+        }
+        else if (mya <= 150)
+        {
+            timePeriod = "Cretaceous";
+        }
+        else if (mya <= 65)
+        {
+            timePeriod = "Paleogene";
+        }
+        else if (mya <= 20)
+        {
+            timePeriod = "Quaternary";
+        }
+        periodText.text = $"Current Period - {timePeriod}";
+    }
     RenderTexture GenerateRenderTexture()
     {
         RenderTexture renderTexture = new RenderTexture(textureResolution, textureResolution, 0);

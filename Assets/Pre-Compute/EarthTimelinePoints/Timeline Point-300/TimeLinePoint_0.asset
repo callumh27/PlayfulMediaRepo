@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: TimeLinePoint_0
   m_EditorClassIdentifier: Assembly-CSharp::EarthTimelinePoint
   millionYearsAgo: 300
-  heightMap: {fileID: 0}
-  tectonicMap: {fileID: 0}
+  heightMap: {fileID: 11700000, guid: 75c2d07f6e25b2d4eb56b8af34f13652, type: 2}
+  tectonicMap: {fileID: 11700000, guid: 04caed636050d5840898319ac4afbddf, type: 2}
   tectonicPlates: []
   tectonicPoints:
   - {x: NaN, y: 39.26219, z: NaN, w: 0}
@@ -530,3 +530,5 @@ MonoBehaviour:
   - {x: 3.8363786, y: -16.141216, z: -11.168854, w: 0}
   - {x: NaN, y: -33.43935, z: NaN, w: 0}
   earthTemperature: 47.4
+  currentPeriod: 
+  seaLevel: 0.3

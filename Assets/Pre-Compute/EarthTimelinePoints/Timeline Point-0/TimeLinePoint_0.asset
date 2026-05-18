@@ -18,3 +18,5 @@ MonoBehaviour:
   tectonicPlates: []
   tectonicPoints: []
   earthTemperature: 50
+  currentPeriod: Holocene
+  seaLevel: 0.3

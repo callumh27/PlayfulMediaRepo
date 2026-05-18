@@ -26,6 +26,8 @@ public class EarthTimelinePoint: ScriptableObject
     [Range(0f, 100f)]
     public float earthTemperature = 30f;
 
+    public string currentPeriod;
+
     [Range(0f, 1f)]
     public float seaLevel = 0.3f;
 
