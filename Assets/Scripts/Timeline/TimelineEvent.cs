@@ -1,5 +1,7 @@
 using UnityEngine;
 
+
+[CreateAssetMenu(fileName = "Timeline Event", menuName = "Earth Timeline")]
 public class TimelineEvent : ScriptableObject
 {
 

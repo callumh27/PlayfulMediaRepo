@@ -3,6 +3,7 @@ using System.IO;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 
@@ -18,6 +19,7 @@ public class TimelineManager : MonoBehaviour
 
     [Header("Data")]
     [SerializeField] private List<EarthTimelinePoint> timelinePoints;
+    [SerializeField] private List<TimelineEvent> timelineEvents;
     [Range(0,100f)]
     public float currentTime = 0;
 
@@ -30,6 +32,9 @@ public class TimelineManager : MonoBehaviour
     [SerializeField] private RectTransform timelineBar;
     [SerializeField] private TMP_Text timeText;
     [SerializeField] private TMP_Text periodText;
+    [SerializeField] private GameObject currentEventUI;
+    [SerializeField] private GameObject temperatureSlider;
+    [SerializeField] private GameObject seaLevelSlider;
 
     public Material earthMaterial;
 
@@ -42,19 +47,25 @@ public class TimelineManager : MonoBehaviour
 
     private TimelineTransition[] transitions;
 
+    private List<GameObject> timelineEventVisuals;
+
+
+    private bool showingCurrentEventUI = false;
+    private TimelineEvent currentEvent;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         BakeTransitions();
         GenerateOutputTextures();
+        GenerateTimelineEvents();
         earthMaterial.SetTexture("_TectonicTexture", outputTectonicTexture);
         earthMaterial.SetTexture("_HeightmapTexture", outputHeightTexture);
-        
+
         // fix this if you want to have a setting to view the tectonic plates
         //earthMaterial.SetTexture("_PlateColourLookupTexture", editableTimeLine.plateColourLookup);
-        
-
+        seaLevelSlider.GetComponent<Slider>().onValueChanged.AddListener((value) => UpdateOutputTextures());
+        temperatureSlider.GetComponent<Slider>().onValueChanged.AddListener((value) => UpdateOutputTextures());
     }
 
     private void Update()
@@ -62,19 +73,31 @@ public class TimelineManager : MonoBehaviour
         //UpdateOutputTextures(currentTime/100f);
         earthMaterial.SetFloat("_Temperature", currentTemperature);
         earthMaterial.SetFloat("_SeaLevel", currentSeaLevel);
+
+        if (showingCurrentEventUI == true)
+        {
+            currentEventUI.transform.Find("EventName").GetComponent<TMP_Text>().text = $"Current Event: {currentEvent.eventName}";
+            currentEventUI.transform.Find("EventDesc").GetComponent<TMP_Text>().text = currentEvent.eventText;
+            currentEventUI.SetActive(true);
+        }
+        else
+        {
+            currentEventUI.SetActive(false);
+        }
+
     }
 
     
 
     private void OnValidate()
     {
-        UpdateOutputTextures(currentTime / 100f);
+        UpdateOutputTextures();
     }
 
     public void SetTime(float time)
     {
         currentTime = time;
-        UpdateOutputTextures(currentTime/100f);
+        UpdateOutputTextures();
         timeText.text = FormatGeologicalTime();
         
     }
@@ -84,27 +107,23 @@ public class TimelineManager : MonoBehaviour
         SetTime(newValue);
     }
 
-    public void GenerateTimelinePoints()
+    public void GenerateTimelineEvents()
     {
-        foreach (Transform child in timelineBar)
-        {
-            if (child.gameObject != timelinePointPrefab) Destroy(child.gameObject);
-        }
-
+        
         float totalWidth = timelineBar.rect.width;
 
-        foreach (var point in timelinePoints)
+        foreach (var timelineEvent in timelineEvents)
         {
-            /*GameObject newPoint = Instantiate(timelinePointPrefab, timelineBar);
+            GameObject newEventVisual = Instantiate(timelinePointPrefab, timelineBar);
 
-            RectTransform rt = newPoint.GetComponent<RectTransform>();
+            RectTransform rt = newEventVisual.GetComponent<RectTransform>();
 
             rt.anchorMin = new Vector2(0,0.5f);
             rt.anchorMax = new Vector2(0,0.5f);
             rt.pivot = new Vector2(0.5f, 0.5f);
 
-            float xPosition = point.normalizedTime * totalWidth;
-            rt.anchoredPosition = new Vector2(xPosition, 0);*/
+            float xPosition = (1f - (timelineEvent.eventTimeMYA / 4540f) * totalWidth) + totalWidth;
+            rt.anchoredPosition = new Vector2(xPosition, 0.5f);
 
         }
     }
@@ -130,8 +149,23 @@ public class TimelineManager : MonoBehaviour
         outputTectonicTexture = GenerateRenderTexture();
     }
 
-    void UpdateOutputTextures(float time)
+    void UpdateOutputTextures()
     {
+        float time = currentTime / 100f;
+        int mya = (int)((1 - time) * 4540);
+        Debug.Log(mya);
+        for (int i = 0; i < timelineEvents.Count - 1; i++)
+        {
+            
+            if (mya < timelineEvents[i].eventTimeMYA + 40 && mya > timelineEvents[i].eventTimeMYA - 40)
+            {
+                showingCurrentEventUI = true;
+                currentEvent = timelineEvents[i];
+                break;
+            }
+            showingCurrentEventUI = false;
+            currentEvent = null;
+        }
 
         for (int i = 0; i < transitions.Length; i++)
         {
@@ -139,6 +173,8 @@ public class TimelineManager : MonoBehaviour
             float point2Time = 1 - (timelinePoints[i + 1].millionYearsAgo / 4540f);
 
             UpdateTimePeriod(time);
+
+            
 
             if (time < point1Time || time > point2Time)
             {
@@ -149,8 +185,8 @@ public class TimelineManager : MonoBehaviour
 
             float t = Mathf.InverseLerp(point1Time, point2Time, time);
 
-            currentTemperature = Mathf.Lerp(timelinePoints[i].earthTemperature, timelinePoints[i + 1].earthTemperature, t);
-            currentSeaLevel = Mathf.Lerp(timelinePoints[i].seaLevel, timelinePoints[i + 1].seaLevel, t);
+            currentTemperature = (Mathf.Lerp(timelinePoints[i].earthTemperature, timelinePoints[i + 1].earthTemperature, t)) + temperatureSlider.GetComponent<Slider>().value;
+            currentSeaLevel = (Mathf.Lerp(timelinePoints[i].seaLevel, timelinePoints[i + 1].seaLevel, t)) + seaLevelSlider.GetComponent<Slider>().value;
 
             heightmapLerpCompute.SetFloat("t", t);
 
@@ -172,7 +208,7 @@ public class TimelineManager : MonoBehaviour
     void UpdateTimePeriod(float time)
     {
         string timePeriod = "Holocene";
-        int mya = (int)((time) * 4540);
+        int mya = (int)((1 - time) * 4540);
         if (mya >= 4540)
         {
             timePeriod = "Hadean";
@@ -233,7 +269,7 @@ public class TimelineManager : MonoBehaviour
         {
             timePeriod = "Quaternary";
         }
-        periodText.text = $"Current Period - {timePeriod}";
+        periodText.text = timePeriod;
     }
     RenderTexture GenerateRenderTexture()
     {
