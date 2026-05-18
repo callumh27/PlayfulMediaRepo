@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 932f8d6889f79ab4d89ab019050a57ba, type: 3}
+  m_Name: First Life
+  m_EditorClassIdentifier: Assembly-CSharp::TimelineEvent
+  eventTimeMYA: 3850
+  eventName: First Life Evolved
+  eventText: Around 3.85 billion years ago, the first life began to evolve within
+    the depths of the ocean. Feeding off of an ammonia heavy soup, these creatures
+    are responsible for life as we know it today.
+  eventIcon: {fileID: 0}

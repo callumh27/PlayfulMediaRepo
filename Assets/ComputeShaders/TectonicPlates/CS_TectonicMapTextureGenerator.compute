@@ -1,0 +1,73 @@
+#pragma kernel TectonicsGenerator
+
+// creates a texture of plateID
+
+
+RWTexture3D<float2> TectonicLookupTexture;
+/*
+R = plateId
+G = plate boundaries
+*/
+
+int amountOfPlates;
+
+float4 tectonicPoints[1024];
+
+int textureSize;
+float planetRadius;
+
+struct TectonicPlate
+{
+    float4 colour;
+};
+
+TectonicPlate tectonicPlates[25];
+
+
+[numthreads(8,8,8)]
+void TectonicsGenerator(uint3 id : SV_DispatchThreadID)
+{
+    float3 worldPos = (id / float(textureSize - 1.0) - 0.5f) * planetRadius;
+    
+    float halfRadius = planetRadius / 2;
+    float maxD = length(float3(halfRadius, halfRadius, halfRadius));
+    
+    float pixelValue = length(worldPos) / (maxD + 1) - 0.5f;
+    
+    /*for (int i = 0; i < 256; i++)
+        {
+            if (distance(worldPos, tectonicPoints[i].xyz) < 0.25f)
+            {
+                TectonicLookupTexture[id] = float4(tectonicPoints[i].w,tectonicPoints[i].w,tectonicPoints[i].w,1);//tectonicColours[closestPointIndex];
+            }
+        }*/
+
+    // pixelValue == 0 is the surface of the sphere
+    if (pixelValue > -0.01f && pixelValue < 0.01f)
+    { // is a surface point
+        int closestPointIndex = -1;
+        float closestDistance = 1000000;
+        // TODO: refactor this so that it is spread across threads for faster execution
+        for (int i = 0; i < tectonicPoints.Length; i++)
+        {
+            if (distance(worldPos, tectonicPoints[i].xyz) < closestDistance)
+            {
+                closestPointIndex = i;
+                closestDistance = distance(worldPos, tectonicPoints[i].xyz);
+
+            }
+        }
+
+
+
+        TectonicLookupTexture[id] = float2(
+            (float)tectonicPoints[closestPointIndex].w / (float) amountOfPlates,
+            TectonicLookupTexture[id].g);
+        
+    }
+    else{
+        TectonicLookupTexture[id] = float2(0,0);
+    }
+        
+        
+}

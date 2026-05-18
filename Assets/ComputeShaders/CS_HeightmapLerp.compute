@@ -1,0 +1,14 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+RWTexture3D<float2> srcHeightTexture;
+RWTexture3D<float2> destHeightTexture;
+RWTexture3D<float2> outputHeightTexture;
+
+float t;
+
+[numthreads(8, 8, 8)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+    outputHeightTexture[id] = lerp(srcHeightTexture[id], destHeightTexture[id], t);
+}
