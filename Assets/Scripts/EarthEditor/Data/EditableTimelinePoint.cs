@@ -21,22 +21,26 @@ public class EditableTimelinePoint
     [Range(0f, 100f)]
     public float earthTemperature = 30f;
 
+    [Range(0f, 1f)]
+    public float seaLevel = 0.3f;
+
     private int renderTextureSize = 256;
     private int amountOfTectonicPoints = 512;
     private ComputeBuffer tectonicPointBuffer;
 
-    public EditableTimelinePoint(RenderTexture tectonicRt, RenderTexture heightRt, List<TectonicPlate> newPlateList, Vector4[] newTecPoints, int newYrsAgo, float temp)
+    public EditableTimelinePoint(RenderTexture tectonicRt, RenderTexture heightRt, List<TectonicPlate> newPlateList, Vector4[] newTecPoints, int newYrsAgo, float temp, float sLevel)
     {
         heightMap = heightRt;
-        tectonicMap = tectonicRt;
-        tectonicPlates.Clear();
-        tectonicPlates = newPlateList;
-        tectonicPoints = newTecPoints;
+        //tectonicMap = tectonicRt;
+        //tectonicPlates.Clear();
+        //tectonicPlates = newPlateList;
+        //tectonicPoints = newTecPoints;
         millionYearsAgo = newYrsAgo;
         earthTemperature = temp;
-        tectonicPointBuffer = new ComputeBuffer(tectonicPoints.Length, sizeof(float) * 4);
-        tectonicPointBuffer.SetData(tectonicPoints);
-        UpdateTectonicLookupTexture();
+        seaLevel = sLevel;
+        //tectonicPointBuffer = new ComputeBuffer(tectonicPoints.Length, sizeof(float) * 4);
+        //tectonicPointBuffer.SetData(tectonicPoints);
+        //UpdateTectonicLookupTexture();
     }
 
     public EditableTimelinePoint()

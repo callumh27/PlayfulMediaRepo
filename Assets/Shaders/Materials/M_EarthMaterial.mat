@@ -53,7 +53,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _HeightmapTexture:
-        m_Texture: {fileID: 8400000, guid: c6da2051a2647c7438a77e40181e1d6c, type: 2}
+        m_Texture: {fileID: 8400000, guid: cc98e7f2b182d3640b14eb79ee39eeaf, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _LandmassTexture:
@@ -85,7 +85,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TectonicTexture:
-        m_Texture: {fileID: 8400000, guid: 8f54f2080c483774995c864c668b6d8d, type: 2}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -121,6 +121,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _GuidelineBrightness: 0.25
     - _Metallic: 0
     - _NoiseSize: 50
     - _OcclusionStrength: 1
@@ -129,7 +130,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _SeaLevel: 0.38
+    - _SeaLevel: 0.3
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -137,18 +138,18 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _Temp: 0
-    - _Temperature: 41
+    - _Temperature: 50
     - _TerrainFrequency: 0.8
-    - _TerrainLacunarity: 2
-    - _TerrainNoiseScale: 7.24
-    - _TerrainPersistence: 0.533
+    - _TerrainLacunarity: 2.8
+    - _TerrainNoiseScale: 11.05
+    - _TerrainPersistence: 0.724
     - _ViewPlateBoundaries: 0
     - _ViewTectonics: 0
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     - _adddebug: 0
-    - _amountOfPlates: 7
+    - _amountOfPlates: 0
     - _debugTec: 0.44
     - _debugTextureOffset: 1.138
     m_Colors:

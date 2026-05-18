@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.IO;
+using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 /* 
@@ -16,19 +19,23 @@ public class TimelineManager : MonoBehaviour
     [Range(0,100f)]
     public float currentTime = 0;
 
-    public ComputeShader plateMovementCompute;
+    public ComputeShader heightmapLerpCompute;
     private int textureResolution = 256;
 
 
     [Header("UI References")]
     [SerializeField] private GameObject timelinePointPrefab;
     [SerializeField] private RectTransform timelineBar;
+    [SerializeField] private TMP_Text timeText;
 
     public Material earthMaterial;
 
     [Header("Output")]
     public RenderTexture outputTectonicTexture;
     public RenderTexture outputHeightTexture;
+
+    public float currentTemperature;
+    public float currentSeaLevel;
 
     private TimelineTransition[] transitions;
 
@@ -49,13 +56,28 @@ public class TimelineManager : MonoBehaviour
 
     private void Update()
     {
-        UpdateOutputTextures(currentTime);
+        //UpdateOutputTextures(currentTime/100f);
+        earthMaterial.SetFloat("_Temperature", currentTemperature);
+        earthMaterial.SetFloat("_SeaLevel", currentSeaLevel);
+    }
+
+    
+
+    private void OnValidate()
+    {
+        UpdateOutputTextures(currentTime / 100f);
     }
 
     public void SetTime(float time)
     {
         currentTime = time;
-        UpdateOutputTextures(currentTime);
+        UpdateOutputTextures(currentTime/100f);
+        timeText.text = FormatGeologicalTime();
+    }
+
+    public void SliderChanged(float newValue)
+    {
+        SetTime(newValue);
     }
 
     public void GenerateTimelinePoints()
@@ -87,8 +109,8 @@ public class TimelineManager : MonoBehaviour
     {
         if (timelinePoints == null || timelinePoints.Count < 2) return;
         transitions = new TimelineTransition[timelinePoints.Count - 1];
-
-        for (int i = 0; i < timelinePoints.Count -1; i++)
+        Debug.Log("HELLO");
+        for (int i = 0; i < timelinePoints.Count - 1; i++)
         {
             transitions[i] = new TimelineTransition
             {
@@ -109,8 +131,9 @@ public class TimelineManager : MonoBehaviour
     {
         for (int i = 0; i < transitions.Length; i++)
         {
-            float point1Time = 1 - (timelinePoints[i].millionYearsAgo / 4540);
-            float point2Time = 1 - (timelinePoints[i + 1].millionYearsAgo / 4540);
+            float point1Time = 1 - (timelinePoints[i].millionYearsAgo / 4540f);
+            float point2Time = 1 - (timelinePoints[i + 1].millionYearsAgo / 4540f);
+
 
             if (time < point1Time || time > point2Time)
             {
@@ -118,29 +141,19 @@ public class TimelineManager : MonoBehaviour
             }
 
             float t = Mathf.InverseLerp(point1Time, point2Time, time);
-            Vector4[] rotations = transitions[i].GetSlerpedRotations(t);
-            Vector4[] tectonicPoints = transitions[i].GetRotatedTectonicPoints(t);
 
-            earthMaterial.SetFloat("_amountOfPlates", transitions[i].point1.tectonicPlates.Count);
+            currentTemperature = Mathf.Lerp(timelinePoints[i].earthTemperature, timelinePoints[i + 1].earthTemperature, t);
+            currentSeaLevel = Mathf.Lerp(timelinePoints[i].seaLevel, timelinePoints[i + 1].seaLevel, t);
 
-            plateMovementCompute.SetVectorArray("plateRotations", rotations);
-            plateMovementCompute.SetVectorArray("tectonicPoints", tectonicPoints);
-            plateMovementCompute.SetFloat("planetRadius", 20);
-            plateMovementCompute.SetInt("textureSize", 256);
-            plateMovementCompute.SetFloat("t", t);
+            heightmapLerpCompute.SetFloat("t", t);
 
-            Debug.Log(transitions[i].point1.tectonicMap == null);
 
-            plateMovementCompute.SetTexture(0, "srcTectonicTexture", transitions[i].bakedTectonicMap1);
-            plateMovementCompute.SetTexture(0, "srcHeightTexture", transitions[i].bakedHeightMap1);
-            plateMovementCompute.SetTexture(0, "destHeightTexture", transitions[i].bakedHeightMap2);
+            heightmapLerpCompute.SetTexture(0, "srcHeightTexture", transitions[i].bakedHeightMap1);
+            heightmapLerpCompute.SetTexture(0, "destHeightTexture", transitions[i].bakedHeightMap2);
 
-            plateMovementCompute.SetTexture(0, "outputHeightTexture", outputHeightTexture);
-            plateMovementCompute.SetTexture(0, "outputTectonicTexture", outputTectonicTexture);
+            heightmapLerpCompute.SetTexture(0, "outputHeightTexture", outputHeightTexture);
 
-            Debug.Log($"tectonic map: {transitions[i].point1.tectonicMap.width} x {transitions[i].point1.tectonicMap.height} x {transitions[i].point1.tectonicMap.depth} format: {transitions[i].point1.tectonicMap.graphicsFormat}");
-
-            plateMovementCompute.Dispatch(0, textureResolution / 8, textureResolution / 8, textureResolution / 8);
+            heightmapLerpCompute.Dispatch(0, textureResolution / 8, textureResolution / 8, textureResolution / 8);
 
             //Debug.Log("updated");
 
@@ -159,7 +172,46 @@ public class TimelineManager : MonoBehaviour
         renderTexture.filterMode = FilterMode.Bilinear;
         renderTexture.Create();
 
+        AssetDatabase.CreateAsset(renderTexture, CreateCorrectPathName("Assets/Pre-Compute/Cache/", "OutputTexture"));
+
         return renderTexture;
+    }
+
+    string FormatGeologicalTime()
+    {
+        float mya = (1 - currentTime/100f) * 4540;
+
+        if (mya >= 1000)
+        {
+            float bya = Mathf.Round(mya / 10f) / 100f;
+            return $"{bya} BYA";
+        }
+        else
+        {
+            float rounded = Mathf.Round(mya);
+            if (rounded == 0)
+            {
+                return "Present Day";
+            }
+            return $"{rounded} MYA";
+        }
+    }
+
+    string CreateCorrectPathName(string path, string assetName)
+    {
+        int fileNumber = 0;
+        string fileName;
+        string fullPath;
+
+        do
+        {
+            fileName = $"{assetName}_{fileNumber}.asset";
+            fullPath = path + fileName;
+            fileNumber++;
+        }
+        while (File.Exists(fullPath));
+
+        return fullPath;
     }
 
 

@@ -741,6 +741,20 @@
         {
             "m_OutputSlot": {
                 "m_Node": {
+                    "m_Id": "6513643759124280bc3c3866daad4a3a"
+                },
+                "m_SlotId": 2
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "cbaaa8fad3fa48a099afb1dbd1842946"
+                },
+                "m_SlotId": 2
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
                     "m_Id": "67d4d9c3bff0462fab71704c628a7245"
                 },
                 "m_SlotId": 2
@@ -1357,20 +1371,6 @@
         {
             "m_OutputSlot": {
                 "m_Node": {
-                    "m_Id": "e829bf86399547f293e49dc48f4022dd"
-                },
-                "m_SlotId": 3
-            },
-            "m_InputSlot": {
-                "m_Node": {
-                    "m_Id": "cbaaa8fad3fa48a099afb1dbd1842946"
-                },
-                "m_SlotId": 2
-            }
-        },
-        {
-            "m_OutputSlot": {
-                "m_Node": {
                     "m_Id": "e846bcbe59574731a3111ab9c713d7aa"
                 },
                 "m_SlotId": 0
@@ -1492,7 +1492,7 @@
     "m_ShaderOutputName": "Edge",
     "m_StageCapability": 3,
     "m_Value": {
-        "x": 0.7799999713897705,
+        "x": 0.8500000238418579,
         "y": 1.0,
         "z": 1.0,
         "w": 1.0
@@ -3498,10 +3498,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -380.99993896484377,
-            "y": 384.0000305175781,
-            "width": 207.99996948242188,
-            "height": 301.9999694824219
+            "x": -425.0,
+            "y": 398.0,
+            "width": 208.0,
+            "height": 302.0
         }
     },
     "m_Slots": [
@@ -8247,7 +8247,7 @@
     "m_Hidden": false,
     "m_PerRendererData": false,
     "m_customAttributes": [],
-    "m_Value": 0.3199999928474426,
+    "m_Value": 0.4099999964237213,
     "m_FloatType": 0,
     "m_LiteralFloatMode": false,
     "m_RangeValues": {
@@ -8639,7 +8639,7 @@
     "m_Hidden": false,
     "m_PerRendererData": false,
     "m_customAttributes": [],
-    "m_Value": 0.5,
+    "m_Value": 0.550000011920929,
     "m_FloatType": 0,
     "m_LiteralFloatMode": false,
     "m_RangeValues": {

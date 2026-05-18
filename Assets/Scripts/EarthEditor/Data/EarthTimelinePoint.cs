@@ -26,6 +26,9 @@ public class EarthTimelinePoint: ScriptableObject
     [Range(0f, 100f)]
     public float earthTemperature = 30f;
 
+    [Range(0f, 1f)]
+    public float seaLevel = 0.3f;
+
     private int renderTextureSize = 256;
 
 

@@ -295,7 +295,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 399106770}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a482823d7fced4c44ac9e51cbada58bb, type: 3}
   m_Name: 
@@ -803,12 +803,24 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1324463687}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 1
+  m_MaxValue: 100
   m_WholeNumbers: 0
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1820715338}
+        m_TargetAssemblyTypeName: TimelineManager, Assembly-CSharp
+        m_MethodName: SliderChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1763906269
 GameObject:
   m_ObjectHideFlags: 0
@@ -913,12 +925,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 190145d7362655c4faca26b394b65f16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimelineManager
-  timelinePercentage: 0
+  timelinePoints:
+  - {fileID: 11400000, guid: 2a9bcd19144813b479ef92f5e5bc4548, type: 2}
+  - {fileID: 11400000, guid: e4171ed0a54d79e46ae90b6867504693, type: 2}
+  - {fileID: 11400000, guid: 382232c2aca23b34485fa16d1b3e236a, type: 2}
+  - {fileID: 11400000, guid: 08d4ea0ee8c434449a754216a853da68, type: 2}
+  - {fileID: 11400000, guid: 78b3d15f3aae4e045a167e3ef85ea47b, type: 2}
+  - {fileID: 11400000, guid: 3a993bdd85594e641988f4c4f9952a85, type: 2}
+  - {fileID: 11400000, guid: dda2e0071f396f348bcdbedaa5c5ea93, type: 2}
+  - {fileID: 11400000, guid: 090cad357af6b03499e702dcb164edd5, type: 2}
+  - {fileID: 11400000, guid: 1f2d1a53e7f75d14a99bf6b97569898e, type: 2}
+  currentTime: 0
+  heightmapLerpCompute: {fileID: 7200000, guid: 825adbba491530f4fa8d8fc883a45825, type: 3}
   timelinePointPrefab: {fileID: 0}
   timelineBar: {fileID: 0}
-  timelinePoints:
-  - normalizedTime: 0
-    yearsAgo: 
+  timeText: {fileID: 180838457}
+  earthMaterial: {fileID: 2100000, guid: b0db3d3dcd0d42742b5557dc60e3f9eb, type: 2}
+  outputTectonicTexture: {fileID: 0}
+  outputHeightTexture: {fileID: 0}
+  currentTemperature: 0
+  currentSeaLevel: 0
 --- !u!4 &1820715339
 Transform:
   m_ObjectHideFlags: 0

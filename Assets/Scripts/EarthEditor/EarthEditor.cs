@@ -51,6 +51,7 @@ public class EarthEditor : MonoBehaviour
             earthMaterial.SetTexture("_PlateColourLookupTexture", editableTimeLine.plateColourLookup);
             earthMaterial.SetFloat("_amountOfPlates", editableTimeLine.tectonicPlates.Count);
             earthMaterial.SetFloat("_Temperature", editableTimeLine.earthTemperature);
+            earthMaterial.SetFloat("_SeaLevel", editableTimeLine.seaLevel);
             if (currentMode == EarthEditorState.Tectonics)
             {
                 if (editableTimeLine.tectonicMap == null)
@@ -146,7 +147,7 @@ public class EarthEditor : MonoBehaviour
         {
             RenderTexture tectonicRT = ConvertToRenderTexture(currentTimelineToEdit.tectonicMap);
             RenderTexture heightRT = ConvertToRenderTexture(currentTimelineToEdit.heightMap);
-            editableTimeLine = new EditableTimelinePoint(tectonicRT, heightRT, currentTimelineToEdit.tectonicPlates, currentTimelineToEdit.tectonicPoints, currentTimelineToEdit.millionYearsAgo, currentTimelineToEdit.earthTemperature);
+            editableTimeLine = new EditableTimelinePoint(tectonicRT, heightRT, currentTimelineToEdit.tectonicPlates, currentTimelineToEdit.tectonicPoints, currentTimelineToEdit.millionYearsAgo, currentTimelineToEdit.earthTemperature, currentTimelineToEdit.seaLevel);
         }
     }
 
